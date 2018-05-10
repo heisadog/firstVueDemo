@@ -16,7 +16,7 @@ export default {
   },
   mounted(){
       this.data = this.$route.query;
-      this.getDtl()
+      this.getDtl();
   },
   methods:{
       getDtl:function(){
