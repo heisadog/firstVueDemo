@@ -20,6 +20,7 @@ export default {
   },
   methods:{
       getDtl:function(){
+          
           //AS_USER_ID,AS_DEPT_ID,AS_FUNC_NAME,,,,,,,
             var _this = this; 
             var vBiz = new D.FYBusiness("PRODUCTIONSUMMARYDETAILQRY");
