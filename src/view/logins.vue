@@ -17,6 +17,7 @@
     </div>
 </template>
 <script>
+//重新复制一份 分开2个路口~~更新程序方便 不需要更新2次
 export default {
   data() {
       return {
@@ -65,8 +66,8 @@ export default {
                   var AC_HEAD = vOpr1.getResult(d, "AC_RESULT").rows;
                   console.log(AC_HEAD);
                   localStorage.loginname =  AC_HEAD[0].loginname
-                  _this.$router.push('/step1')//生产
-                  //_this.$router.push('/addArder')//追单
+                  //_this.$router.push('/step1')//生产
+                  _this.$router.push('/addArder')//追单
               } else {
                   // todo...[d.errorMessage]//AS_LOGINNAME,AS_LOGINPWD PHONEUSERLOGINQRY
                   console.log(d.errorMessage);

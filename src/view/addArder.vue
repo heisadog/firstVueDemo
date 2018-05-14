@@ -17,11 +17,11 @@
                 <ul v-if="hasRes" class="m-tab-dtl" @click="goDetail(item.id,item.orderno,item.dycsjscsj,item.jcsj,item.percentage,item.zhsjscsj)" :data-id='item.id'
                 :data-orderno='item.orderno' :data-dycsjscsj='item.dycsjscsj' :data-jcsj='item.jcsj'
                 :data-percentage='item.percentage' :data-zhsjscsj='item.zhsjscsj'>
-                    <li class="selflex">{{item.orderno}}</li>
-                    <li class="selflex" style="color:#3297fd">{{item.num_sumqry}}</li>
-                    <li class="selflex">{{item.rkd_sumqry}}</li>
-                    <li class="selflex">{{item.takeorderdate}}</li>
-                    <li class="selflex">{{item.jcsj}}</li>
+                    <li class="selflex adda">{{item.orderno}}</li>
+                    <li class="selflex adda" style="color:#3297fd">{{item.num_sumqry}}</li>
+                    <li class="selflex adda">{{item.rkd_sumqry}}</li>
+                    <li class="selflex adda">{{item.takeorderdate}}</li>
+                    <li class="selflex adda">{{item.jcsj}}</li>
                 </ul>
             </yd-list>
             <pageError v-if="!hasRes" :msg='pageError'></pageError>

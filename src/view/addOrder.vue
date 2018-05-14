@@ -6,26 +6,30 @@
     <ul class="m-tab" style="top:88px">
         <li>主订单号</li>
         <li>总定量</li>
-        <li style="width:50px">百分比</li>
-        <li>接单时间</li>
-        <li>进仓时间</li>
+        <li>百分比</li>
+        <li style="line-height:14px"><span style="    display: block;
+    padding-top: 4px;">第一次实际<br>生产时间</span></li>
+        <li style="line-height:14px"><span style="    display: block;
+    padding-top: 4px;">最后实际<br>生产时间</span></li>
     </ul>
     <!-- 列表显示区域 -->
     <div class="m-main os" style="height: calc(100% - 176px);height: -webkit-calc(100% - 176px);top:125px">
         <yd-pullrefresh :callback="loadList" ref="pullrefreshDemo">
             <yd-list theme="4" v-for="(item, key) in list" :key="key">
-                <ul v-if="hasRes" class="m-tab-dtl" @click="changeActive(key)" :data-id='item.id'>
-                    <li class="selflex">{{item.orderno}}</li>
-                    <li class="selflex" style="color:#3297fd">{{item.num_sumqry}}</li>
-                    <li class="selflex">{{item.rkd_sumqry}}</li>
-                    <li class="selflex">{{item.takeorderdate}}</li>
-                    <li class="selflex">{{item.jcsj}}</li>
+                <ul v-if="hasRes" class="m-tab-dtl" @click="goDetail(item.id,item.orderno,item.dycsjscsj,item.jcsj,item.percentage,item.zhsjscsj)" :data-id='item.id'
+                :data-orderno='item.orderno' :data-dycsjscsj='item.dycsjscsj' :data-jcsj='item.jcsj'
+                :data-percentage='item.percentage' :data-zhsjscsj='item.zhsjscsj'>
+                    <li class="selflex adda">{{item.orderno}}</li>
+                    <li class="selflex adda" style="color:#3297fd">{{item.num_sumqry}}</li>
+                    <li class="selflex adda">{{item.rkd_sumqry}}</li>
+                    <li class="selflex adda">{{item.takeorderdate}}</li>
+                    <li class="selflex adda">{{item.jcsj}}</li>
                 </ul>
             </yd-list>
             <pageError v-if="!hasRes" :msg='pageError'></pageError>
         </yd-pullrefresh>   
     </div>
-   <addFooter :idx='0'></addFooter>
+   <addFooter :idx='1'></addFooter>
 </div>   
 </template>
 <script>
@@ -128,6 +132,20 @@ export default {
              setTimeout(() => {
                  this.$refs.pullrefreshDemo.$emit('ydui.pullrefresh.finishLoad'); 
              }, 1000);
+        },
+        //去详情
+        goDetail:function(id,orderno,dycsjscsj,jcsj,percentage,zhsjscsj){
+            this.$router.push({
+                path:'/addDtl',
+                query:{ id:id,
+                        footId:'1',
+                        orderno:orderno,
+                        dycsjscsj:dycsjscsj || '',
+                        jcsj:jcsj || '',
+                        percentage:percentage || '',
+                        zhsjscsj:zhsjscsj || ''
+                    }
+            })//this.$route.path
         },
     }
 }

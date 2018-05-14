@@ -2,7 +2,7 @@
   <div class="m-navbar">
     <div class="flex-search">
         <form action="#">
-            <input type="search" v-model="key" @keypress="search" results="5" class="search_input" placeholder="请输入质号或供应商">
+            <input type="search" v-model="key" @keypress="search" results="5" class="search_input" placeholder="请输入主订单号或供应商">
         </form>
     </div>
     <div class="paixu" @click="change()" :data-sort='asc' :idx = idx>排序</div>

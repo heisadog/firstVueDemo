@@ -28,7 +28,7 @@
                   <span>装箱单</span>
                   <span>操作</span>
               </div>
-              <!-- <yd-lightbox :num="senddtl.length" class="showtable showsecond" v-for="(data,index) in senddtl" style="border-top:none">
+              <yd-lightbox :num="senddtl.length" class="showtable showsecond" v-for="(data,index) in senddtl" style="border-top:none">
                   <span>{{data.sendbox}}</span>
                   <span>{{data.sendqty}}</span>
                   <span>{{data.oprdatetime}}</span>
@@ -38,15 +38,15 @@
                   <span :data-footId='4' :data-dtlid='data.dtlid' :data-mainid='data.mainid' 
                   :data-id='data.id' :data-imgurl='data.packingpic' :data-sendbox='data.sendbox' :data-sendqty='data.sendqty' data-type="update"
                    @click="gotoEdit(index)" class="edit">编辑</span>
-              </yd-lightbox> -->
-              <div class="showtable showsecond" v-for="data,index in senddtl" style="border-top:none">
+              </yd-lightbox>
+              <!-- <div class="showtable showsecond" v-for="data,index in senddtl" style="border-top:none">
                   <span>{{data.sendbox}}</span>
                   <span>{{data.sendqty}}</span>
                   <span>{{data.oprdatetime}}</span>
                   <span>查看</span>
                   <span class="edit" :data-footId='4' :data-dtlid='data.dtlid' :data-mainid='data.mainid' 
                   :data-id='data.id' :data-imgurl='data.packingpic' :data-sendbox='data.sendbox' :data-sendqty='data.sendqty' data-type="update" @click="gotoEdit(index)">编辑</span>
-              </div>
+              </div> -->
           </div>
       </div>
         <!-- 按钮  按钮是 根据页签 id 来判断的-->

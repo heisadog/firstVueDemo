@@ -6,9 +6,11 @@
           <span>装箱单图片</span>
           <ul v-if="" class="checkimg">
               <li style="position: relative;">从相册选择
-                  <input id="checkimg" type="file" value="" @change="upload">
+                  <input id="checkimg" type="file" value="" accept="image/*" capture="filesystem" @change="upload">
               </li>
-              <li>拍照</li>
+              <li style="position: relative;">拍照
+                  <input id="checkimg" type="file" value="" capture="filesystem">
+              </li>
           </ul>
     
                 <img id="img" src="" alt="">

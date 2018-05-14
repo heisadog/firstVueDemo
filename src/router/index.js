@@ -19,6 +19,13 @@ export default new Router({
                 component: resolve => require(['@/view/login'], resolve)
             },
             {
+                path: '/logins',
+                meta: {
+                    title: '登录'
+                },
+                component: resolve => require(['@/view/logins'], resolve)
+            },
+            {
                 path: '/step1',
                 meta: {
                     title: '第一步'

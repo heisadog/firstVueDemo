@@ -2,7 +2,7 @@
   <div>
       <search @ongetdata ='getsort' @onsearch = 'searchfn'  :idx='1'></search>
       <!-- 页签 -->
-      <ul class="m-tab">
+      <ul class="m-tab m-tab-cover">
             <li>图片</li>
             <li>追单编号</li>
             <li>供应商</li>
@@ -13,7 +13,7 @@
        <div class="m-main os" style="height: calc(100% - 280px);height: -webkit-calc(100% - 280px);">
             <yd-pullrefresh :callback="loadList" ref="pullrefreshDemo">
                 <yd-list theme="4" v-for="(item, key) in list" :key="key">
-                    <ul v-if="hasRes" class="m-tab-dtl" @click="changeActive(key)" :data-id='item.id' 
+                    <ul v-if="hasRes" class="m-tab-cover m-tab-dtl" @click="changeActive(key)" :data-id='item.id' 
                     :data-mainid='item.mainid' :data-orderid='item.orderid'>
                         <li><img slot="img" :src="item.mainpicurl"></li>
                         <li class="selflex">{{item.productcode}}</li>

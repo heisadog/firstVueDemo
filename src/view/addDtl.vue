@@ -1,5 +1,38 @@
 <template>
-  <div>66668888</div>
+  <div>
+      <dtl :items="dtl,table"></dtl>
+      <div class="w98 addscolpart os">
+           <p class="shownum" v-for='data in dtl'>进仓时间:<span>{{data.jcsj}}</span></p>
+           <div class="showtable">
+               <span v-for="data in lan1">{{data.style}}</span>
+           </div>
+           <div class="showtable" style="border-top:none">
+               <span v-for="data in lan1">{{data.num}}</span>
+           </div>
+           <div class="showtable" style="border-top:none">
+               <span v-for="data in lan2">{{data.style}}</span>
+           </div>
+           <div class="showtable" style="border-top:none">
+               <span v-for="data in lan1">{{data.num}}</span>
+           </div>
+           <div class="showtable" style="border-top:none">
+               <span v-for="data in lan3">{{data.style}}</span>
+           </div>
+           <div class="showtable" style="border-top:none">
+               <span v-for="data in lan1">{{data.num}}</span>
+           </div>
+
+           <ul class="dtlshtime" v-for="data in dtl">
+              <li><span>百分比</span><span>{{data.percentage}}</span></li>
+              <li><span>工厂生产进度：</span><span>{{data.prodprogress}}</span></li>
+              <li><span>接单时间：</span><span>{{data.takeorderdate}}</span></li>
+              <li><span>同意延迟最终时间：</span><span>{{data.enddatetime}}</span></li>
+              <li><span>理单负责人</span><span>{{data.arrangeuser}}</span></li>
+              <li><span>跟单负责人</span><span>{{data.trackuser}}</span></li>
+          </ul>
+      </div>
+      <addFooter :idx='0'></addFooter>
+  </div>
 </template>
 <script>
 export default {
@@ -11,7 +44,10 @@ export default {
           dycsjscsj:'',
           jcsj:'',
           percentage:'',
-          zhsjscsj:''      
+          zhsjscsj:'' ,
+          dtl:[],// 详情的表头信息
+          table:[], //详情的 表格数据  
+          lan1:[],lan2:[],lan3:[]   
         }
   },
   mounted(){
@@ -48,7 +84,43 @@ export default {
                     console.log(re3)
                     console.log(re4)
                     console.log(re5)
-        
+                    const table = [];
+                    for(let i = 0; i < re2.length;i++){
+                        const obj = {'style':'','num':''};
+                        const style = re2[i].field;
+                        obj.num = re3[0][style]; 
+                        obj.style = re2[i].title;
+                        table.push(obj);
+                    }
+                    _this.table = table;
+                    _this.dtl = re1;
+                    const lan1 = [];
+                    for (let i = 0; i < 3; i++) {
+                        const obj = {'style':'','num':''};
+                        const style = re4[i].field;
+                        obj.num = re5[0][style]; 
+                        obj.style = re4[i].title;
+                        lan1.push(obj);
+                    }
+                    const lan2 = [];
+                    for (let i = 3; i < 6; i++) {
+                        const obj = {'style':'','num':''};
+                        const style = re4[i].field;
+                        obj.num = re5[0][style]; 
+                        obj.style = re4[i].title;
+                        lan2.push(obj);
+                    }
+                    const lan3 = [];
+                    for (let i = 6; i < 9; i++) {
+                        const obj = {'style':'','num':''};
+                        const style = re4[i].field;
+                        obj.num = re5[0][style]; 
+                        obj.style = re4[i].title;
+                        lan3.push(obj);
+                    }
+                    _this.lan1 = lan1;
+                    _this.lan2 = lan2;
+                    _this.lan3 = lan3;
                 } else {
                     // todo...[d.errorMessage]//AS_LOGINNAME,AS_LOGINPWD PHONEUSERLOGINQRY
                     console.log(d.errorMessage);

@@ -64,7 +64,7 @@ Object.keys(D).forEach((key) => {
 });
 
 
-
+Vue.config.productionTip = false
 
 //通过components下的index.js文件导入组件
 import components from './components/index'
