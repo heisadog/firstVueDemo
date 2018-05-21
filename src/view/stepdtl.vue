@@ -1,76 +1,82 @@
 <template>
-  <div>
-      <!-- 固定部分 -->
-      <dtl :items="dtl,table,senddtl"></dtl>
-      <!-- 滚动部分 -->
-      <div class="scolpart os">
-          <ul class="dtlshtime" v-for="data in dtl">
-              <li><span>合约时间：</span><span>{{data.contractdate}}</span></li>
-              <li><span>照片样时间：</span><span>{{data.photodate}}</span></li>
-              <li><span>大货样时间：</span><span>{{data.largecargodate}}</span></li>
-              <li><span>预估面料到位时间：</span><span>{{data.estfabricarrivedate}}</span></li>
-              <li><span>面料卡位时间：</span><span>{{data.fabricarrivedate}}</span></li>
-              <!-- 此处模块一 是需要选择输入的  -->
-              <li v-if="idx != '0'" style="margin-top:10px;color:#1a1a1a"><span>面料实际到位时间：</span><span>{{data.fabricactualarrivedate}}</span></li>
-              <li v-if="idx != '0'" style="color:#1a1a1a"><span>辅料实际到位时间：</span><span>{{data.accessoryactualarrivedate}}</span></li>
-          </ul>
-          <ul class="m-time" v-if="idx === '0'">
-                <li><span>面料实际到位时间</span><yd-datetime type="date" v-model="datetime0"></yd-datetime></li>
-                <li><span>辅料实际到位时间</span><yd-datetime type="date" v-model="datetime1"></yd-datetime></li>
-          </ul>
-          <!-- 下面的 发货箱数 是第五个 模块 独有的 -->
-          <div v-if="isSend">
-              <div v-if="isSendDtl" class="shownumxs"  v-for='data in dtl'>已发货数量：<span>{{data.sendqty}}</span> <span style="float:right">已发货箱数：{{data.sendbox}}</span></div>
-              <div v-if="isSendDtl" class="showtable showfirst">
-                  <span>发货箱数</span>
-                  <span>发货数量</span>
-                  <span>发货时间</span>
-                  <span>装箱单</span>
-                  <span>操作</span>
-              </div>
-              <yd-lightbox :num="senddtl.length" class="showtable showsecond" v-for="(data,index) in senddtl" style="border-top:none">
-                  <span>{{data.sendbox}}</span>
-                  <span>{{data.sendqty}}</span>
-                  <span>{{data.oprdatetime}}</span>
-                  <span>
-                     <yd-lightbox-img v-for="item in list" style="width:40px;height:40px" src="http://img.taopic.com/uploads/allimg/120727/201995-120HG1030762.jpg" ></yd-lightbox-img>
-                  </span>
-                  <span :data-footId='4' :data-dtlid='data.dtlid' :data-mainid='data.mainid' 
-                  :data-id='data.id' :data-imgurl='data.packingpic' :data-sendbox='data.sendbox' :data-sendqty='data.sendqty' data-type="update"
-                   @click="gotoEdit(index)" class="edit">编辑</span>
-              </yd-lightbox>
-              <!-- <div class="showtable showsecond" v-for="data,index in senddtl" style="border-top:none">
-                  <span>{{data.sendbox}}</span>
-                  <span>{{data.sendqty}}</span>
-                  <span>{{data.oprdatetime}}</span>
-                  <span>查看</span>
-                  <span class="edit" :data-footId='4' :data-dtlid='data.dtlid' :data-mainid='data.mainid' 
-                  :data-id='data.id' :data-imgurl='data.packingpic' :data-sendbox='data.sendbox' :data-sendqty='data.sendqty' data-type="update" @click="gotoEdit(index)">编辑</span>
-              </div> -->
-          </div>
-      </div>
-        <!-- 按钮  按钮是 根据页签 id 来判断的-->
-      <div class="m-button" v-if="idx === '0'" >
-        <span class="m-but-master" @click="submit">提交</span>
-      </div>
-      <div class="m-button" v-else-if="idx === '1'" >
-        <span class="m-but-master" @click="submit">开裁</span>
-      </div>
-      <div class="m-button" v-else-if="idx === '2'" >
-        <span class="m-but-master" @click="submit">上线</span>
-      </div>
-      <div class="m-button" v-else-if="idx === '3'" >
+<div class="yd-flexview">
+    <div class="g-scrollview">
+        <!-- 固定部分 -->
+        <dtl :items="dtl,table,senddtl"></dtl>
+        <!-- 滚动部分 -->
+        <div class="scolpart" :class='["fisdtl", {on:idx === 1} ]'>
+            <ul class="dtlshtime" v-for="data in dtl" :key="dtl.id">
+                <li><span>合同时间：</span><span>{{data.contractdate}}</span></li>
+                <li><span>照片样时间：</span><span>{{data.photodate}}</span></li>
+                <li><span>大货样时间：</span><span>{{data.largecargodate}}</span></li>
+                <li><span>预估面料到位时间：</span><span>{{data.estfabricarrivedate}}</span></li>
+                <li><span>面料卡位时间：</span><span>{{data.fabricarrivedate}}</span></li>
+                <!-- 此处模块一 是需要选择输入的  -->
+                <li v-if="idx != '0'" style="margin-top:10px;color:#1a1a1a"><span>面料实际到位时间：</span><span>{{data.fabricactualarrivedate}}</span></li>
+                <li v-if="idx != '0'" style="color:#1a1a1a"><span>辅料实际到位时间：</span><span>{{data.accessoryactualarrivedate}}</span></li>
+            </ul>
+           
+            <!-- 下面的 发货箱数 是第五个 模块 独有的 -->
+            <div v-if="isSend">
+                <div v-if="isSendDtl" class="shownumxs"  v-for='data in dtl'>已发货数量：<span>{{data.sendqty}}</span> <span style="float:right">已发货箱数：{{data.sendbox}}</span></div>
+                <div v-if="isSendDtl" class="showtable showfirst">
+                    <span>发货箱数</span>
+                    <span>发货数量</span>
+                    <span>发货时间</span>
+                    <span>装箱单</span>
+                    <span>操作</span>
+                </div>
+                <yd-lightbox :num="senddtl.length" class="showtable showsecond" v-for="(data,index) in senddtl" :key="senddtl.id" style="border-top:none">
+                    <span>{{data.sendbox}}</span>
+                    <span>{{data.sendqty}}</span>
+                    <span>{{data.oprdatetime}}</span>
+                    <span>
+                        <yd-lightbox-img class="wcnmlgb" slot="img" :src="data.packingpic" :onerror='defaultImg'></yd-lightbox-img>
+                    </span>
+                    <span :data-footId='4' :data-dtlid='data.dtlid' :data-mainid='data.mainid' 
+                    :data-id='data.id' :data-imgurl='data.packingpic' :data-packingpic2='data.packingpic2' :data-sendbox='data.sendbox' :data-sendqty='data.sendqty' data-type="update"
+                    @click="gotoEdit(index)" class="edit">编辑</span>
+                </yd-lightbox>
+                <!-- <div class="showtable showsecond" v-for="data,index in senddtl" style="border-top:none">
+                    <span>{{data.sendbox}}</span>
+                    <span>{{data.sendqty}}</span>
+                    <span>{{data.oprdatetime}}</span>
+                    <span>查看</span>
+                    <span class="edit" :data-footId='4' :data-dtlid='data.dtlid' :data-mainid='data.mainid' 
+                    :data-id='data.id' :data-imgurl='data.packingpic' :data-sendbox='data.sendbox' :data-sendqty='data.sendqty' data-type="update" @click="gotoEdit(index)">编辑</span>
+                </div> -->
+            </div>
+        </div>        
+    </div>
+
+
+     <ul class="m-time" v-if="idx === '0'">
+        <li><span>面料实际到位时间</span><input id="start" class='yd-datetime-input' v-model="datetime0"></input></li>
+        <li><span>辅料实际到位时间</span><input id='end' class='yd-datetime-input'  v-model="datetime1"></input></li>
+    </ul>
+    <!-- 按钮  按钮是 根据页签 id 来判断的-->
+    <div class="m-button" v-if="idx === '0'" >
+            <span class="m-but-master" @click="submit">提交</span>
+    </div>
+    <div class="m-button" v-else-if="idx === '1'" >
+            <span class="m-but-master" @click="submit">开裁</span>
+    </div>
+    <div class="m-button" v-else-if="idx === '2'" >
+            <span class="m-but-master" @click="submit">上线</span>
+    </div>
+    <div class="m-button" v-else-if="idx === '3'" >
         <span class="m-but-master" @click="submit">后整</span>
-      </div>
-      <div class="m-button" v-else="idx === '4'">
-          <!-- <span class="m-but-master" @click="gotoEdit">编辑</span>  编辑 -->
-          <span class="m-but-master" @click="addEdit">发货</span> <!--新增编辑-->
-          <span class="m-but-master" @click="submit">发货完全</span>
-      </div>
-      <foot :idx ='0'></foot>
+    </div>
+    <div class="m-button" v-else="idx === '4'">
+        <!-- <span class="m-but-master" @click="gotoEdit">编辑</span>  编辑 -->
+        <span class="m-but-master" @click="addEdit">发货</span> <!--新增编辑-->
+        <span class="m-but-master" @click="submit">发货完全</span>
+    </div>
+    <foot :idx ='0'></foot>
   </div>
 </template>
 <script>
+
 export default {
     data() {
       return {
@@ -81,23 +87,15 @@ export default {
         senddtl:[],//第五个模块的发货数量
         isSend:true,// 是否显示第五个模块的 发或数量
         isSendDtl:true,// 当 第五个模块的 发货数量为0 的时候 。隐藏表头
-        datetime0: '',
+        datetime0: '',// (new Date()).getFullYear()+'-'+((new Date()).getMonth()+1)+'-'+(new Date()).getDate(), 即便是这样还是报错！！
         datetime1: '',
-        list:[],//只用于 循环展示图片 
+        defaultImg: 'this.src="' + require('../assets/img/w.png') + '"'
       }
     },
+    created(){
+        this.init_datetimePicker()
+    },
     mounted(){
-            setTimeout(() => {
-                this.list = [
-                    {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s1.jpg', original: 'http://static.ydcss.com/uploads/lightbox/meizu_1.jpg'},
-                    {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s2.jpg', original: 'http://static.ydcss.com/uploads/lightbox/meizu_2.jpg'},
-                    {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s3.jpg', original: 'http://static.ydcss.com/uploads/lightbox/meizu_3.jpg'},
-                    {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s4.jpg', original: 'http://static.ydcss.com/uploads/lightbox/meizu_4.jpg'},
-                    {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s5.jpg', original: 'http://static.ydcss.com/uploads/lightbox/meizu_5.jpg'},
-                    {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s6.jpg', original: 'http://static.ydcss.com/uploads/lightbox/meizu_6.jpg'}
-                ];
-            }, 2000);
-
       //页面地址中的参数
       console.log(this.$route.query)
       let id = this.$route.query.id;
@@ -108,14 +106,51 @@ export default {
       // 第五个模块的 详情显示 发货箱数
       if(idx == '4') this.isSend = true;
       else this.isSend = false;
-
-      console.error(id);
-      console.error(idx);
+      if(idx == '1') $('.scolpart').addClass('fisdtl');
       //能力有限，还不知道 如何 动态的用变化的foot 所以 jq 设置高亮
       $('.footer li').removeClass('on');
       $('.footer li').eq(idx).addClass('on');
+      
+      this.$nextTick(() => { /* code */
+          this.init_datetimePicker()
+      })
     },
     methods:{
+            //初始化 时间插件
+        init_datetimePicker:function () {
+            $("#start").datetimePicker({
+                    title: '请选择时间',
+                    min: "1990-12-12",
+                    max: "2222-12-12 12:12",
+                    monthNames:"",
+                    times:function(){
+                    },
+                    parse: function(date) {
+                        return date.split(/\D/).filter(function(t) {
+                            return !!date
+                        });
+                    },
+                    onOpen:function (values) {
+                        $("#state").val(values.value[0]+'-'+values.value[1]+'-'+values.value[2])
+                    }
+                });
+                $("#end").datetimePicker({
+                    title: '请选择时间',
+                    min: "1990-12-12",
+                    max: "2222-12-12 12:12",
+                    monthNames:"",
+                    times:function(){
+                    },
+                    parse: function(date) {
+                        return date.split(/\D/).filter(function(t) {
+                            return !!date
+                        });
+                    },
+                    onOpen:function (values) {
+                        $("#state").val(values.value[0]+'-'+values.value[1]+'-'+values.value[2])
+                    }
+                });
+        }, 
       submit:function(){
         console.log(this.idx)
         let _this = this;
@@ -130,8 +165,8 @@ export default {
             obj.AS_DTLID = _this.dtl[0].id;
             obj.AS_MAINID = _this.dtl[0].mainid;
             obj.AS_ORDERID = _this.dtl[0].orderid;
-            obj.AS_FABRICACTUALARRIVEDATE = '';
-            obj.AS_ACCESSORYACTUALARRIVEDATE = '';
+            obj.AS_FABRICACTUALARRIVEDATE = $('#start').val();;//只有第一步需要 其他为空
+            obj.AS_ACCESSORYACTUALARRIVEDATE = $('#end').val();;
             obj.AS_OPRFLAG = Number(_this.idx)+1;
             vOpr1Data.push(obj);
         }
@@ -147,6 +182,7 @@ export default {
                   callback:()=>{
                     _this.$router.go(-1);
                     _this.$store.commit('backReload',true);
+                    _this.$store.commit('upstate','')
                   }
                 });
             } else {
@@ -163,7 +199,8 @@ export default {
         let dtlid = $('.edit').eq(index).attr('data-dtlid');
         let id = $('.edit').eq(index).attr('data-id');
         let orderno = this.dtl[0].orderno;
-        this.$router.push({path:'/edit',query:{footId:'4',type:type,id:id,mainid:mainid,sendqty:sendqty,sendbox:sendbox,imgurl:imgurl,dtlid:dtlid,orderno:orderno}})
+        let packingpic2 = $('.edit').eq(index).attr('data-packingpic2');
+        this.$router.push({path:'/edit',query:{footId:'4',type:type,id:id,mainid:mainid,sendqty:sendqty,sendbox:sendbox,imgurl:imgurl,dtlid:dtlid,orderno:orderno,packingpic2:packingpic2}})
       },
       //新增 发货
       addEdit:function(){
@@ -213,9 +250,13 @@ export default {
                   _this.dtl = AC_HEAD1;
                   _this.table = table;
                   _this.senddtl = AC_HEAD4;
-                  for(let i = 0; i<AC_HEAD4.length;i++){
-                      _this.list.push(AC_HEAD4[i].packingpic)
+                  if(AC_HEAD1[0].fabricactualarrivedate){
+                       _this.datetime0 = AC_HEAD1[0].fabricactualarrivedate;
                   }
+                  if(AC_HEAD1[0].accessoryactualarrivedate){
+                        _this.datetime1 = AC_HEAD1[0].accessoryactualarrivedate;
+                  }  
+                  console.log(AC_HEAD4)
               } else {
                   // todo...[d.errorMessage]//AS_LOGINNAME,AS_LOGINPWD PHONEUSERLOGINQRY
                   console.log(d.errorMessage);

@@ -2,10 +2,10 @@
   <div class="m-navbar">
     <div class="flex-search">
         <form action="#">
-            <input type="search" v-model="key" @keypress="search" results="5" class="search_input" placeholder="请输入主订单号或供应商">
+            <input type="search" v-model="key" @focus= 'hideFooter' @blur='showFooter'  @keypress="search" results="5" class="search_input" placeholder="请输入货号或者供应商">
         </form>
     </div>
-    <div class="paixu" @click="change()" :data-sort='asc' :idx = idx>排序</div>
+    <div class="paixu" @click="change()" :data-sort='asc' :idx = idx>&#xe60e</div>
 </div>
 </template>
 <script>
@@ -38,6 +38,12 @@
                 else this.asc = 'asc';
                 this.$emit('ongetdata',this.key,this.asc)
                 //this.$store.commit('upSort',true)
+            },
+            hideFooter:function(){
+                //$('.footer').hide()
+            },
+            showFooter:function(){
+                //$('.footer').show()
             }
         },
         props:['idx']

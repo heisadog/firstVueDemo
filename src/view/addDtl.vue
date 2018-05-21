@@ -1,37 +1,43 @@
 <template>
-  <div>
-      <dtl :items="dtl,table"></dtl>
+<div class="yd-flexview">
+    <div class="g-scrollview">
+      <addDtl :items="dtl,table"></addDtl>
       <div class="w98 addscolpart os">
-           <p class="shownum" v-for='data in dtl'>进仓时间:<span>{{data.jcsj}}</span></p>
-           <div class="showtable">
-               <span v-for="data in lan1">{{data.style}}</span>
-           </div>
-           <div class="showtable" style="border-top:none">
-               <span v-for="data in lan1">{{data.num}}</span>
-           </div>
-           <div class="showtable" style="border-top:none">
-               <span v-for="data in lan2">{{data.style}}</span>
-           </div>
-           <div class="showtable" style="border-top:none">
-               <span v-for="data in lan1">{{data.num}}</span>
-           </div>
-           <div class="showtable" style="border-top:none">
-               <span v-for="data in lan3">{{data.style}}</span>
-           </div>
-           <div class="showtable" style="border-top:none">
-               <span v-for="data in lan1">{{data.num}}</span>
+           <div v-if="ordershow">
+               <p class="shownum" v-for='data in dtl'>进仓时间:<span>{{data.jcsj}}</span></p>
+                <div class="showtable" style='background-color: #f5f5f5;'>
+                    <span v-for="data in lan1">{{data.style}}</span>
+                </div>
+                <div class="showtable" style="border-top:none">
+                    <span v-for="data in lan1">{{data.num}}</span>
+                </div>
+                <div class="showtable" style="border-top:none;background-color: #f5f5f5;">
+                    <span v-for="data in lan2">{{data.style}}</span>
+                </div>
+                <div class="showtable" style="border-top:none">
+                    <span v-for="data in lan2">{{data.num}}</span>
+                </div>
+                <div class="showtable" style="border-top:none;background-color: #f5f5f5;">
+                    <span v-for="data in lan3">{{data.style}}</span>
+                </div>
+                <div class="showtable" style="border-top:none;">
+                    <span v-for="data in lan3">{{data.num}}</span>
+                </div>
            </div>
 
            <ul class="dtlshtime" v-for="data in dtl">
-              <li><span>百分比</span><span>{{data.percentage}}</span></li>
+              <li><span>百分比：</span><span>{{data.percentage}}%</span></li>
               <li><span>工厂生产进度：</span><span>{{data.prodprogress}}</span></li>
               <li><span>接单时间：</span><span>{{data.takeorderdate}}</span></li>
               <li><span>同意延迟最终时间：</span><span>{{data.enddatetime}}</span></li>
-              <li><span>理单负责人</span><span>{{data.arrangeuser}}</span></li>
-              <li><span>跟单负责人</span><span>{{data.trackuser}}</span></li>
+              <li><span>理单负责人：</span><span>{{data.arrangeuser}}</span></li>
+              <li><span>跟单负责人：</span><span>{{data.trackuser}}</span></li>
+              <li v-if="!ordershow"><span>第一次实际生产时间：</span><span>{{data.dycsjscsj}}</span></li>
+              <li v-if="!ordershow"><span>最后实际生产时间：</span><span>{{data.zhsjscsj}}</span></li>
           </ul>
       </div>
-      <addFooter :idx='0'></addFooter>
+      </div>
+      <addFooter :idx='idx'></addFooter>
   </div>
 </template>
 <script>
@@ -47,11 +53,15 @@ export default {
           zhsjscsj:'' ,
           dtl:[],// 详情的表头信息
           table:[], //详情的 表格数据  
-          lan1:[],lan2:[],lan3:[]   
+          lan1:[],lan2:[],lan3:[],
+          idx:'', 
+          ordershow:false,
         }
   },
   mounted(){
       this.data = this.$route.query;
+      this.idx = this.$route.query.footId;
+      if(this.idx == 0) this.ordershow = true;
       this.getDtl();
   },
   methods:{
@@ -71,7 +81,7 @@ export default {
             vOpr1Data.setValue("AS_PERCENTAGE",_this.data.percentage );//百分比
             vOpr1Data.setValue("AS_DYCSJSCSJ",_this.data.dycsjscsj );//1 2 第一次实际生产时间
             vOpr1Data.setValue("AS_ZHSJSCSJ",_this.data.zhsjscsj );//1 2  最后实际生产时间
-            vOpr1Data.setValue("AS_OPRFLAG",_this.data.footId );//1 2  底部标签 1-头批，2-追单
+            vOpr1Data.setValue("AS_OPRFLAG",Number(_this.data.footId)+1 );//1 2  底部标签 1-头批，2-追单
             var ip = new D.InvokeProc();
             ip.addBusiness(vBiz);
             console.log(JSON.stringify(ip))

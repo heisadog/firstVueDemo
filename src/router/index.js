@@ -14,84 +14,84 @@ export default new Router({
             }, {
                 path: '/login',
                 meta: {
-                    title: '登录'
+                    title: '生产跟进'
                 },
                 component: resolve => require(['@/view/login'], resolve)
             },
             {
                 path: '/logins',
                 meta: {
-                    title: '登录'
+                    title: '数据汇总'
                 },
                 component: resolve => require(['@/view/logins'], resolve)
             },
             {
                 path: '/step1',
                 meta: {
-                    title: '第一步'
+                    title: '生产跟进'
                 },
                 component: resolve => require(['@/view/step1'], resolve)
             },
             {
                 path: '/step2',
                 meta: {
-                    title: '第er步'
+                    title: '生产跟进'
                 },
                 component: resolve => require(['@/view/step2'], resolve)
             },
             {
                 path: '/step3',
                 meta: {
-                    title: '第er步'
+                    title: '生产跟进'
                 },
                 component: resolve => require(['@/view/step3'], resolve)
             },
             {
                 path: '/step4',
                 meta: {
-                    title: '第er步'
+                    title: '生产跟进'
                 },
                 component: resolve => require(['@/view/step4'], resolve)
             },
             {
                 path: '/step5',
                 meta: {
-                    title: '第er步'
+                    title: '生产跟进'
                 },
                 component: resolve => require(['@/view/step5'], resolve)
             },
             {
                 path: '/stepdtl',
                 meta: {
-                    title: '详情'
+                    title: '生产跟进'
                 },
                 component: resolve => require(['@/view/stepdtl'], resolve)
             },
             {
                 path: '/edit',
                 meta: {
-                    title: '编辑'
+                    title: '生产跟进'
                 },
                 component: resolve => require(['@/view/edit'], resolve)
             },
             {
                 path: '/addArder',
                 meta: {
-                    title: '头批'
+                    title: '数据汇总'
                 },
                 component: resolve => require(['@/view/addArder'], resolve)
             },
             {
                 path: '/addOrder',
                 meta: {
-                    title: '追单'
+                    title: '数据汇总'
                 },
                 component: resolve => require(['@/view/addOrder'], resolve)
             },
             {
                 path: '/addDtl',
                 meta: {
-                    title: '详情'
+                    title: '数据汇总'
                 },
                 component: resolve => require(['@/view/addDtl'], resolve)
             }

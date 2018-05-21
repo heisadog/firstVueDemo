@@ -14,20 +14,22 @@
     </ul>
     <!-- 列表显示区域 -->
     <div class="m-main os" style="height: calc(100% - 176px);height: -webkit-calc(100% - 176px);top:125px">
-        <yd-pullrefresh :callback="loadList" ref="pullrefreshDemo">
-            <yd-list theme="4" v-for="(item, key) in list" :key="key">
+        <!-- <yd-pullrefresh :callback="loadList" ref="pullrefreshDemo"> -->
+        <yd-infinitescroll :callback="loadLists" ref="infinitescrollDemo">
+            <yd-list theme="4" v-for="(item, key) in list" :key="key"  slot="list">
                 <ul v-if="hasRes" class="m-tab-dtl" @click="goDetail(item.id,item.orderno,item.dycsjscsj,item.jcsj,item.percentage,item.zhsjscsj)" :data-id='item.id'
                 :data-orderno='item.orderno' :data-dycsjscsj='item.dycsjscsj' :data-jcsj='item.jcsj'
                 :data-percentage='item.percentage' :data-zhsjscsj='item.zhsjscsj'>
                     <li class="selflex adda">{{item.orderno}}</li>
                     <li class="selflex adda" style="color:#3297fd">{{item.num_sumqry}}</li>
-                    <li class="selflex adda">{{item.rkd_sumqry}}</li>
-                    <li class="selflex adda">{{item.takeorderdate}}</li>
-                    <li class="selflex adda">{{item.jcsj}}</li>
+                    <li class="selflex adda">{{item.percentage}}</li>
+                    <li class="selflex adda">{{item.dycsjscsj}}</li>
+                    <li class="selflex adda">{{item.zhsjscsj}}</li>
                 </ul>
             </yd-list>
-            <pageError v-if="!hasRes" :msg='pageError'></pageError>
-        </yd-pullrefresh>   
+        <!-- </yd-pullrefresh> -->
+        </yd-infinitescroll>
+        <pageError v-if="!hasRes" :msg='pageError'></pageError>   
     </div>
    <addFooter :idx='1'></addFooter>
 </div>   
@@ -40,9 +42,10 @@ export default {
             pageError:'暂无查询数据~',
             list: [],//数据列表
             searchKey:'',
-            searchSort:'asc',
+            searchSort:'desc',
             colorStatus:'',//颜色状态  
             size:'', //尺寸 
+            pageno:1,
             }
   },
   mounted(){
@@ -66,12 +69,18 @@ export default {
         firstGet_color:function(params){
             let _this = this;
             _this.colorStatus = params;
+            _this.pageno = 1;
+            _this.list = [];
+            _this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.reInit');
             _this.getList()
         },
         // 子组件 尺寸 点击 变化 引起父组件 事件执行 并修改了data中的属性
         firstGet_size: function (params) {
             let _this = this;
             _this.size = params;
+            _this.pageno = 1;
+            _this.list = [];
+            _this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.reInit');
             _this.getList()
             console.log(params)
         },
@@ -79,12 +88,18 @@ export default {
         firstGet_search:function(params){
             let _this = this;
             _this.searchKey = params;
+            _this.pageno = 1;
+            _this.list = [];
+            _this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.reInit');
             _this.getList()
         },
        //排序
         firstGet_sort:function(params){
             let _this = this;
             _this.searchSort = params;
+            _this.pageno = 1;
+            _this.list = [];
+            _this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.reInit');
             _this.getList()
         },
         getList:function(){//AS_USER_ID,AS_DEPT_ID,AS_FUNC_NAME,AS_CONDITION,AS_STATUS,AS_SIZEGROUP,AS_SORT,AS_OPRFLAG
@@ -101,6 +116,8 @@ export default {
             vOpr1Data.setValue("AS_SIZEGROUP",_this.size );//尺码组
             vOpr1Data.setValue("AS_SORT",_this.searchSort );//升 asc 降 desc
             vOpr1Data.setValue("AS_OPRFLAG",'2' );//1 2  底部标签 1-头批，2-追单
+            vOpr1Data.setValue("AN_PAGESIZE",'20' );
+            vOpr1Data.setValue("AN_PAGENO",_this.pageno );
             var ip = new D.InvokeProc();
             ip.addBusiness(vBiz);
             console.log(JSON.stringify(ip))
@@ -110,12 +127,18 @@ export default {
                     var AC_HEAD = vOpr1.getResult(d, "AC_RESULT").rows;
                     console.log(AC_HEAD)
                 
-                    if(AC_HEAD.length == 0) _this.hasRes = false;
+                    if(AC_HEAD.length == 0 && _this.pageno == 1) _this.hasRes = false;
                     else _this.hasRes = true;
 
-                    _this.list = AC_HEAD;
+                    _this.list = _this.list.concat(AC_HEAD);
                     // 更新数据和状态
-                     _this.$store.commit('upList','page2',AC_HEAD);
+                    _this.$store.commit('upList','page2',AC_HEAD);
+                     //单次数据请求结束
+                    _this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+                    //所有的 数据结束
+                    if(AC_HEAD.length<10 && _this.pageno > 1){
+                        _this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                    }
                 } else {
                     // todo...[d.errorMessage]//AS_LOGINNAME,AS_LOGINPWD PHONEUSERLOGINQRY
                     console.log(d.errorMessage);
@@ -133,6 +156,11 @@ export default {
                  this.$refs.pullrefreshDemo.$emit('ydui.pullrefresh.finishLoad'); 
              }, 1000);
         },
+        loadLists(){
+            console.log('滚动加载了')
+            this.pageno ++;
+            this.getList()
+        },
         //去详情
         goDetail:function(id,orderno,dycsjscsj,jcsj,percentage,zhsjscsj){
             this.$router.push({
@@ -142,8 +170,9 @@ export default {
                         orderno:orderno,
                         dycsjscsj:dycsjscsj || '',
                         jcsj:jcsj || '',
-                        percentage:percentage || '',
-                        zhsjscsj:zhsjscsj || ''
+                        percentage:percentage || '0',
+                        zhsjscsj:zhsjscsj || '',
+                        footId:1
                     }
             })//this.$route.path
         },

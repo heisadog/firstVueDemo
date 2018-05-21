@@ -1,7 +1,7 @@
 <template>
   <div class="loginbox" id="context">
       <div class="logo">
-        <img src="../assets/logo.png" style="width:100px">
+        <img src="../assets/logo2.png">
       </div>
       <div class="login_list" style="margin-top: 33px">
         <span>账号</span>
@@ -21,8 +21,8 @@
 export default {
   data() {
       return {
-        name: 'wfy',
-        password: 'wfyerp',
+        name: '',//wfy
+        password: '',//wfyerp
       }
     },
   name: 'App',

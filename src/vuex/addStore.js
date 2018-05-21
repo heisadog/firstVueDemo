@@ -16,8 +16,8 @@ const state = {
     },
     //排序
     sort: {
-        page1: 'asc',
-        page2: 'asc'
+        page1: 'desc',
+        page2: 'desc'
     },
     //是否执行 获取列表数据
     isGet: false

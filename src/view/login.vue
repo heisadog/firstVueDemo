@@ -1,7 +1,7 @@
 <template>
   <div class="loginbox" id="context">
       <div class="logo">
-        <img src="../assets/logo.png" style="width:100px">
+        <img src="../assets/logo2.png">
       </div>
       <div class="login_list" style="margin-top: 33px">
         <span>账号</span>
@@ -20,8 +20,8 @@
 export default {
   data() {
       return {
-        name: 'wfy',
-        password: 'wfyerp',
+        name: '',//wfy
+        password: '',//wfyerp
       }
     },
   name: 'App',
@@ -64,7 +64,7 @@ export default {
                   // todo...
                   var AC_HEAD = vOpr1.getResult(d, "AC_RESULT").rows;
                   console.log(AC_HEAD);
-                  localStorage.loginname =  AC_HEAD[0].loginname
+                  localStorage.loginname =  AC_HEAD[0].loginname;
                   _this.$router.push('/step1')//生产
                   //_this.$router.push('/addArder')//追单
               } else {

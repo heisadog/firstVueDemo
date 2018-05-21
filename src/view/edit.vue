@@ -4,19 +4,24 @@
       <div class="divline"><span>发货数量</span> <input v-model="sendqty" type="tel" name="" id=""></div>
       <div class="divline divimg">
           <span>装箱单图片</span>
-          <ul v-if="" class="checkimg">
+          <ul v-if="isAndroid" class="checkimg">
               <li style="position: relative;">从相册选择
-                  <input id="checkimg" type="file" value="" accept="image/*" capture="filesystem" @change="upload">
+                  <input id="checkimg" type="file" value="" capture="filesystem" @change="upload">
               </li>
               <li style="position: relative;">拍照
-                  <input id="checkimg" type="file" value="" capture="filesystem">
+                  <input id="checkimg" type="file" value="" accept="image/*" capture="filesystem"  @change="upload">
+              </li>
+          </ul>
+          <ul v-if="isIOS" class="checkimg">
+              <li style="position: relative;">选择图片
+                  <input id="checkimg" type="file" value=""  @change="upload">
               </li>
           </ul>
     
-                <img id="img" src="" alt="">
-                <div class="imgclose" v-if="isShowImgCloseBtn" @click="deleteImg">
-                    <span>-</span>
-                </div>
+            <img id="img" :src="img" alt="">
+            <div class="imgclose" v-if="isShowImgCloseBtn" @click="deleteImg">
+                <span>-</span>
+            </div>
           
       </div>
 
@@ -36,20 +41,24 @@ export default {
           id:'',//发货记录表ID，新增时可为空 
           dtlid:'',//明细ID  列表中的id 变成明细id ，新的id是生成的。
           mainid:'',//主表ID  
-          img:'',//图片
+          img:'',//图片 只用于展示
           sendbox:'',//发货箱数
           sendqty:'',//发货数量
           isUpload:false,//是否上传 了图片
           uploadImgurl:'',//上传后 图片的路径
+          packImgUrl:'',//装箱图片
           orderno:'',//主订单号
           picValue:'',headerImage:'',extname:'',//上传相关
           isShowImgCloseBtn:false,//是否显示 删除图片按钮
+          isIOS:false,
+          isAndroid:false
       }
   },
   mounted(){
     this.dtldata = this.$route.query;
     console.log(this.dtldata)
     this.orderno = this.dtldata.orderno;
+    this.packImgUrl = this.dtldata.packingpic2;//
     if(this.dtldata.type =='add'){
         this.type = this.dtldata.type;
         this.id= '';
@@ -63,10 +72,22 @@ export default {
         this.id= this.dtldata.id;
         this.dtlid = this.dtldata.dtlid;
         this.mainid = this.dtldata.mainid;
-        this.img = this.isUpload ? this.uploadImgurl :this.dtldata.img;
+        this.img = this.dtldata.imgurl;
         this.sendbox = this.dtldata.sendbox;
         this.sendqty = this.dtldata.sendqty;
     }
+   
+    //区分 手机系统 
+    var u = navigator.userAgent, app = navigator.appVersion;
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
+    var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    if (isAndroid) {
+       this.isAndroid = true;
+    }
+    if (isIOS) {
+　　　　this.isIOS = true;
+    }
+    console.log(this.isIOS)
   },
   methods:{
     submit:function(){
@@ -81,10 +102,11 @@ export default {
         vOpr1Data.setValue("AS_ID", _this.id);//发货记录表ID，新增时可为空
         vOpr1Data.setValue("AS_DTLID",_this.dtlid );//明细ID
         vOpr1Data.setValue("AS_MAINID",_this.mainid );//主表ID
-        vOpr1Data.setValue("AS_PACKINGPIC",_this.img );//装箱单图片
+        vOpr1Data.setValue("AS_PACKINGPIC",_this.packImgUrl );//装箱单图片
         vOpr1Data.setValue("AS_SENDBOX",_this.sendbox );//发货箱数
         vOpr1Data.setValue("AS_SENDQTY",_this.sendqty );//发货数量
-        vOpr1Data.setValue("AS_REMARK",'' );//备注
+        vOpr1Data.setValue("AS_REMARK",'' );//备注 as_picurl
+        vOpr1Data.setValue("AS_PICURL",_this.uploadImgurl );//本地应用服务器文件路径
         var ip = new D.InvokeProc();
         ip.addBusiness(vBiz);
         console.log(JSON.stringify(ip))
@@ -97,7 +119,10 @@ export default {
                     callback:()=>{
                         console.log(_this.dtldata)
                         if(_this.type =='add'){
-                            window.location.reload();
+                            //window.location.reload();
+                            _this.$router.go(-1) 
+                        }else{
+                            _this.$router.go(-1) 
                         }
                         //_this.sets()
                         //_this.$router.go(-1)
@@ -128,6 +153,7 @@ export default {
     deleteImg:function(){
         $('#img').attr('src','');
         this.isShowImgCloseBtn = false;
+        this.uploadImgurl= '';
     },
     imgPreview (file) {
         //图片读取
@@ -174,31 +200,24 @@ export default {
         formData.append("src",$('#img').attr('src'));
         //console.log(formData.get("src"))
         $.ajax({
-            //http://192.168.20.102:8083/FY_APP_SVR/servlet/Base64FtpUploadPic?childpath=kuaifan/SendPic/C3CD53D038900/688638F231303965E0534414A8C07BA5/wfy
+            //url:'http://192.168.20.102:8083/FY_APP_SVR/servlet/Base64FtpUploadPic?childpath=kuaifan/SendPic/C3CD53D038900/688638F231303965E0534414A8C07BA5/wfy&filename=111&extname=jpg',
             url: basicUrl._wfy_mobile_api_upload_url+"?childpath=kuaifan/SendPic/"+this.mainid+'/'+this.dtlid+"/"+localStorage.loginname+"&filename="+img+ "&extname="+_this.extname,
             type: "POST",
             data: formData,
             processData: false,  // 告诉jQuery不要去处理发送的数据
             contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
             success: function(xhr){
-                console.log(xhr);
                 console.log('上传成');
+                var url = xhr.split('#@#@')[1];
+                _this.packImgUrl = "kuaifan/SendPic/"+_this.mainid+'/'+_this.dtlid+"/"+localStorage.loginname+"/"+img+'.'+_this.extname;
+                _this.uploadImgurl = xhr.split('#@#@')[1];
+                console.log(_this.packImgUrl);
+                console.log(url);
             },
             error:function(e){
                 console.log(e)
             }
         });
-        // $.ajax({
-        //     url: "http://192.168.20.102:8083/FY_APP_SVR/servlet/Base64UploadPic?childpath=kuaifan/SendPic/"+this.mainid+'/'+this.dtlid+"/"+localStorage.loginname+"&filename="+img+ "&extname="+_this.extname,
-        //     type: "POST",
-        //     data: formData,
-        //     processData: false,  // 告诉jQuery不要去处理发送的数据
-        //     contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
-        //     success: function(xhr){
-        //         console.log(xhr);
-        //         console.log('上传成');
-        //     }
-        // });
       },
       imgname:function(){
            //生成 图片的名字

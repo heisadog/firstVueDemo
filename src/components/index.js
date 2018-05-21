@@ -7,6 +7,7 @@ import pageError from './common/pageError'
 import addFooter from './common/addFooter'
 import addHeader from './common/addHeader'
 import addSearch from './common/addSearch'
+import addDtl from './common/addDtl'
 export default {
     foot,
     search,
@@ -15,5 +16,6 @@ export default {
     pageError,
     addFooter,
     addHeader,
-    addSearch
+    addSearch,
+    addDtl
 }

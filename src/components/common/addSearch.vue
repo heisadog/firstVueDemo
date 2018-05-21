@@ -4,10 +4,10 @@
     <div class="add_size" :data-id='defaultSizeId' @click="tapSize">{{defaultSizeName}}</div>  
     <div class="flex-search">
         <form action="#">
-            <input type="search" v-model="key" @keypress="search" results="5" class="search_input" placeholder="请输入质号或供应商">
+            <input type="search" v-model="key" @focus= 'hideFooter' @blur='showFooter' @keypress="search" results="5" class="search_input" placeholder="请输主订单号或供应商">
         </form>
     </div>
-    <div class="paixu" @click="change()" :data-sort='asc' :idx = idx>排序</div>
+    <div class="paixu" @click="change()" :data-sort='asc' :idx = idx>&#xe60e</div>
   </div>
   <!--下拉菜单-->
   <!--下拉菜单 尚未 做成 适应本情况的插件-->
@@ -15,7 +15,9 @@
   <div>
       <div class="yd-mask" style="z-index: 1500; background-color: rgb(0, 0, 0);"></div>
       <div class="yd-actionsheet">
-          <span class="yd-actionsheet-item" style="height:45px;line-height:45px"  v-for="data in size" @click="checkSize(data.kindid,data.kindname)" :data-id='data.kindid'>{{data.kindname}}</span>
+          <span class="yd-actionsheet-item" style="height:45px;line-height:45px;font-size: 14px;"  v-for="data in size" @click="checkSize(data.kindid,data.kindname)" 
+          :data-id='data.kindid'>{{data.kindname}}</span>
+          <span class="yd-actionsheet-item" style="height:45px;line-height:45px;margin-top:8px;font-size: 14px;" @click="closeSize">取消</span>
        </div>
   </div>
 </div>
@@ -54,6 +56,10 @@
                 this.$store.commit('upSize',this.defaultSizeId);
                 //子 组件 传递参数 并使得 父组件 重新获取数据！！
                 this.$emit('onFirstGet',this.defaultSizeId)
+            },
+            closeSize:function(){
+                $('.yd-actionsheet').removeClass('yd-actionsheet-active');
+                $('.yd-mask').removeClass('show_yd_mask');
             },
             search:function (e) {
                 var keycode = e.keyCode;
@@ -109,6 +115,12 @@
                         });
                     }
                 })
+            },
+            hideFooter:function(){
+                //$('.footer').hide()
+            },
+            showFooter:function(){
+                //$('.footer').show()
             }
         },
         props:['idx']

@@ -7,7 +7,7 @@
             <li>追单编号</li>
             <li>供应商</li>
             <li>订货量</li>
-            <li>卡位时间</li>
+            <li>合同时间</li>
        </ul>
        <!-- 列表显示区域 -->
        <div class="m-main os" style="height: calc(100% - 200px);height: -webkit-calc(100% - 200px);">
@@ -15,11 +15,11 @@
                 <yd-list theme="4" v-for="(item, key) in list" :key="key">
                     <ul v-if="hasRes" class="m-tab-cover m-tab-dtl" @click="changeActive(key)" :data-id='item.id' 
                     :data-mainid='item.mainid' :data-orderid='item.orderid'>
-                        <li><img slot="img" :src="item.mainpicurl"></li>
-                        <li class="selflex">{{item.productcode}}</li>
+                        <li><img slot="img" :src="item.mainpicurl" :onerror='defaultImg'></li>
+                        <li class="selflex">{{item.ordercode}}</li>
                         <li class="selflex">{{item.supplier}}</li>
-                        <li class="selflex" style="color:#3297fd"  @click="goDetail(item.id,item.mainid,item.orderid)">{{item.sendqty}}</li>
-                        <li class="selflex">{{item.fabricarrivedate}}</li>
+                        <li class="selflex" style="color:#3297fd"  @click="goDetail(item.id,item.mainid,item.orderid)">{{item.orderqty}}</li>
+                        <li class="selflex">{{item.contractdate}}</li>
                     </ul>
                 </yd-list>
                 <pageError v-if="!hasRes" :msg='pageError'></pageError>
@@ -40,7 +40,8 @@ export default {
         pageError:'暂无查询数据~',
         list: [],//数据列表
         searchKey:'',
-        searchSort:'asc'
+        searchSort:'desc',
+        defaultImg: 'this.src="' + require('../assets/img/w.png') + '"'
       }
     },
     computed:{
@@ -52,8 +53,9 @@ export default {
         //this.getdata();
         //页面初始 数据状态是 false 标识未获取！或者过更新了状态但是 数据为空 ！此时执行获取 否则从 store中获取数据！！！
         // 此处 加上数据为空为空也重新获取数据，主要由于store的 更新数据和状态合在一个方法了，应该 分开执行！！！
-        if(!this.$store.state.status.step3sta || this.$store.state.step3json.length == 0 || this.$store.state.backReload) this.getdata()
-        else this.list = (this.$store.state.step3json)
+        // if(!this.$store.state.status.step3sta || this.$store.state.step3json.length == 0 || this.$store.state.backReload || this.$store.state.status.stepallsta) this.getdata()
+        // else this.list = (this.$store.state.step3json)
+        this.getdata()
     },
     methods:{
         //x修改选中 vue的方式没搞明白怎么实现 先用jq 实现！！！从引入jq 到现在还没用过一次呢
@@ -85,6 +87,8 @@ export default {
            vOpr1Data.setValue("AS_CONDITION",_this.searchKey);//input的搜索 供应商等
             vOpr1Data.setValue("AS_SORT",_this.searchSort );//升 asc 降 desc
             vOpr1Data.setValue("AS_OPRFLAG",'3' );//1 2 3 4 5 底部标签
+            vOpr1Data.setValue("AN_PAGESIZE",'200' );
+            vOpr1Data.setValue("AN_PAGENO",'1' );
             var ip = new D.InvokeProc();
             ip.addBusiness(vBiz);
             console.log(JSON.stringify(ip))
@@ -169,6 +173,7 @@ export default {
                     mes:'上线成功',
                     });
                      $('.m-main .m-tab-dtl').removeClass('check');
+                      _this.$store.commit('upstate','')
                     _this.getdata();//成功后更新了数据 页面会由vue实现重新展示剩余数据~~~
                 } else {
                     // todo...[d.errorMessage]//AS_LOGINNAME,AS_LOGINPWD PHONEUSERLOGINQRY

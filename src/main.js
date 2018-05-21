@@ -36,15 +36,25 @@ Vue.component(LightBoxTxt.name, LightBoxTxt);
 import { ActionSheet } from 'vue-ydui/dist/lib.rem/actionsheet';
 Vue.component(ActionSheet.name, ActionSheet);
 
+import { InfiniteScroll } from 'vue-ydui/dist/lib.rem/infinitescroll';
+Vue.component(InfiniteScroll.name, InfiniteScroll);
+
 import './assets/css/reset.css'
 import './assets/css/public.css'
 import './assets/font/iconfont.css'
 import './assets/css/style.css'
 
 import './assets/js/const.js' //定义全局变量
+import './assets/js/basic';
 
 Vue.prototype.LoginName = '';
 Vue.prototype.DepartmentCode = '';
+
+
+// import 'jquery-weui/dist/js/jquery-weui.min'
+// import 'jquery-weui/dist/css/jquery-weui.min.css'
+import './assets/css/jquery-weui.min.css'
+import './assets/js/jquery-weui.min.js'
 
 import D from './assets/js/daos' //三层调用
 //方法挂靠全局
@@ -64,7 +74,10 @@ Object.keys(D).forEach((key) => {
 });
 
 
+
+
 Vue.config.productionTip = false
+
 
 //通过components下的index.js文件导入组件
 import components from './components/index'
@@ -72,7 +85,11 @@ import components from './components/index'
 Object.keys(components).forEach((key) => {
     Vue.component(key, components[key])
 });
-
+Vue.prototype.appName = '生产跟进';
+router.beforeEach((to, form, next) => {
+    window.document.title = to.meta.title !== undefined ? to.meta.title : Vue.prototype.appName;
+    next()
+});
 
 /* eslint-disable no-new */
 new Vue({

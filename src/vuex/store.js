@@ -14,6 +14,7 @@ export default new Vuex.Store({
             step3sta: false,
             step4sta: false,
             step5sta: false,
+            stepallsta: false, //由于页面 提交过 到了下页 需要执行刷新！！！这是个 总的状态 ，只要提交了~~~
         },
         step1json: [{ "id": "695182916D0935FBE0534414A8C04980", "mainid": "LD18040802739944", "productcode": "B1BF73430", "orderno": "B1BF734308901", "mainpicurl": "http://img.pb89.com/kuaifan/PB/basic/CSB1BF73430_t.jpg", "ordercode": "B1BF7343089-04", "supplier": "花荟11", "orderqty": 18, "sendqty": null, "contractdate": "2018-04-05", "fabricarrivedate": "2018-04-10" }, { "id": "689D8AB799695434E0534414A8C0608E", "mainid": "LD18033002739769", "productcode": "CWEE73724", "orderno": "CWEE737248601", "mainpicurl": "http://img.pb89.com/kuaifan/PC/basic/CSCWEE73724_t.jpg", "ordercode": "CWEE7372486-01", "supplier": "1", "orderqty": 130, "sendqty": null, "contractdate": "2018-03-15", "fabricarrivedate": "2018-04-09" }, { "id": "689D8AB799755434E0534414A8C0608E", "mainid": "LD18033002739769", "productcode": "CWEE73724", "orderno": "CWEE737248601", "mainpicurl": "http://img.pb89.com/kuaifan/PC/basic/CSCWEE73724_t.jpg", "ordercode": "CWEE7372486-02", "supplier": "1", "orderqty": 110, "sendqty": null, "contractdate": "2018-03-15", "fabricarrivedate": "2018-04-09" }],
         step2json: [],
@@ -25,11 +26,11 @@ export default new Vuex.Store({
         // 排序
         isSort: false,
         sort: {
-            sort1: 'asc', //默认升序
-            sort2: 'asc', //默认升序
-            sort3: 'asc', //默认升序
-            sort4: 'asc', //默认升序
-            sort5: 'asc', //默认升序
+            sort1: 'desc', //默认升序
+            sort2: 'desc', //默认升序
+            sort3: 'desc', //默认升序
+            sort4: 'desc', //默认升序
+            sort5: 'desc', //默认升序
         }
     },
     mutations: {
@@ -58,6 +59,9 @@ export default new Vuex.Store({
         },
         upSort(state, msg) {
             state.isSort = msg;
+        },
+        upstate(state, msg) {
+            state.status.stepallsta = true;
         }
     },
     //将其他模块的 .....

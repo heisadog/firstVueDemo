@@ -1,12 +1,12 @@
 <template>
-  <div>
+<div class='footer'>
     <ul class="footer">
       <li v-for='(item,index) of items' :class='[ item.cls , {on:index === idx} ]' @click="$router.push(item.push)">
         <!-- <span>{{item.icon}}</span> -->
         {{item.name}}
       </li>
     </ul>
-  </div>
+</div>
 </template>
 <script>
   export default {
