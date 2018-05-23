@@ -800,4 +800,5 @@
             return EXIF;
         });
     }
+    window.EXIF = EXIF;
 }.call(this));

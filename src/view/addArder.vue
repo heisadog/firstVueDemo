@@ -1,33 +1,35 @@
 <template>
-<div>
-    <addHeader @onFirstGet = 'firstGet_color'></addHeader>
-    <addSearch  @onFirstGetSort ='firstGet_sort' @onFirstGetSearch = 'firstGet_search' @onFirstGet= 'firstGet_size' :idx='2'></addSearch>
-    <!-- 页签 -->
-    <ul class="m-tab" style="top:88px">
-        <li>主订单号</li>
-        <li>总定量</li>
-        <li style="width:50px">百分比</li>
-        <li>接单时间</li>
-        <li>进仓时间</li>
-    </ul>
-    <!-- 列表显示区域 -->
-    <div class="m-main os" style="height: calc(100% - 176px);height: -webkit-calc(100% - 176px);top:125px">
-        <!-- <yd-pullrefresh :callback="loadList" ref="pullrefreshDemo" id="cont"  style="width:100%;overflow: hidden;"> -->
-        <yd-infinitescroll :callback="loadLists" ref="infinitescrollDemo">
-            <yd-list theme="4" v-for="(item, key) in list" :key="key" slot="list">
-                <ul v-if="hasRes" class="m-tab-dtl" @click="goDetail(item.id,item.orderno,item.dycsjscsj,item.jcsj,item.percentage,item.zhsjscsj)" :data-id='item.id'
-                :data-orderno='item.orderno' :data-dycsjscsj='item.dycsjscsj' :data-jcsj='item.jcsj'
-                :data-percentage='item.percentage' :data-zhsjscsj='item.zhsjscsj'>
-                    <li class="selflex adda">{{item.orderno}}</li>
-                    <li class="selflex adda" style="color:#3297fd">{{item.num_sumqry}}</li>
-                    <li class="selflex adda">{{item.percentage}}</li>
-                    <li class="selflex adda">{{item.takeorderdate}}</li>
-                    <li class="selflex adda">{{item.jcsj}}</li>
-                </ul>
-            </yd-list>
-        </yd-infinitescroll>
-        <pageError v-if="!hasRes" :msg='pageError'></pageError>
-        <!-- </yd-pullrefresh>    -->
+<div class="yd-flexview">
+    <div class="g-scrollview">
+        <addHeader @onFirstGet = 'firstGet_color'></addHeader>
+        <addSearch  @onFirstGetSort ='firstGet_sort' @onFirstGetSearch = 'firstGet_search' @onFirstGet= 'firstGet_size' :idx='2'></addSearch>
+        <!-- 页签 -->
+        <ul class="m-tab" style="top:88px">
+            <li>主订单号</li>
+            <li>总定量</li>
+            <li style="width:50px">百分比</li>
+            <li>接单时间</li>
+            <li>进仓时间</li>
+        </ul>
+        <!-- 列表显示区域 -->
+        <div class="m-main os" style="height: calc(100% - 176px);height: -webkit-calc(100% - 176px);top:125px">
+            <yd-pullrefresh :callback="loadList" ref="pullrefreshDemo">
+            <yd-infinitescroll :callback="loadLists" ref="infinitescrollDemo">
+                <yd-list theme="4" v-for="(item, key) in list" :key="key" slot="list">
+                    <ul v-if="hasRes" class="m-tab-dtl" @click="goDetail(item.id,item.orderno,item.dycsjscsj,item.jcsj,item.percentage,item.zhsjscsj)" :data-id='item.id'
+                    :data-orderno='item.orderno' :data-dycsjscsj='item.dycsjscsj' :data-jcsj='item.jcsj'
+                    :data-percentage='item.percentage' :data-zhsjscsj='item.zhsjscsj'>
+                        <li class="selflex adda">{{item.orderno}}</li>
+                        <li class="selflex adda" style="color:#3297fd">{{item.num_sumqry}}</li>
+                        <li class="selflex adda">{{item.percentage}}</li>
+                        <li class="selflex adda">{{item.takeorderdate}}</li>
+                        <li class="selflex adda">{{item.jcsj}}</li>
+                    </ul>
+                </yd-list>
+            </yd-infinitescroll>
+            </yd-pullrefresh>   
+            <pageError v-if="!hasRes" :msg='pageError'></pageError>
+        </div>
     </div>
    <addFooter :idx='0'></addFooter>
 </div>   
@@ -136,7 +138,7 @@ export default {
                      //单次数据请求结束
                     _this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
                     //所有的 数据结束
-                    if(AC_HEAD.length<10 && _this.pageno > 1){
+                    if(AC_HEAD.length<20 && _this.pageno > 1){
                         _this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
                     }
                 } else {
@@ -151,6 +153,9 @@ export default {
         //下拉刷新 获取最新的数据 此时执行一次 getdata
         loadList:function(){
              console.error('执行了下拉刷新获取数据');
+             this.pageno = 1;
+            this.list = [];
+            this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.reInit');
              this.getList();
              setTimeout(() => {
                  this.$refs.pullrefreshDemo.$emit('ydui.pullrefresh.finishLoad'); 

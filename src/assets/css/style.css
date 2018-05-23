@@ -77,7 +77,8 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    background-color: #fff
+    background-color: #fff;
+    z-index: 100;
 }
 
 .footer li.on,
@@ -402,6 +403,7 @@
     justify-content: center;
     align-items: center;
     background-color: #fff;
+    z-index: 100;
 }
 
 .m-button .m-but-master {
@@ -729,7 +731,7 @@ a {
 
 .yd-lightbox-head {
     height: 3rem;
-    top: 40px;
+    top: 60px;
 }
 
 .yd-lightbox-head>span,
@@ -884,4 +886,38 @@ a {
     padding: 1.25rem 0;
     color: #777;
     display: none
+}
+
+.yd-notify,
+.yd-list-loading,
+.yd-pullrefresh-draghelp>div:before,
+.yd-pullrefresh-draghelp>div>span {
+    font-size: 12px;
+}
+
+.yd-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1502;
+    background-color: #000;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.yd-lightbox img {
+    display: block;
+    width: 100%;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
 }

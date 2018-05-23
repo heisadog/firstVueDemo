@@ -30,10 +30,11 @@
               <li><span>工厂生产进度：</span><span>{{data.prodprogress}}</span></li>
               <li><span>接单时间：</span><span>{{data.takeorderdate}}</span></li>
               <li><span>同意延迟最终时间：</span><span>{{data.enddatetime}}</span></li>
-              <li><span>理单负责人：</span><span>{{data.arrangeuser}}</span></li>
-              <li><span>跟单负责人：</span><span>{{data.trackuser}}</span></li>
               <li v-if="!ordershow"><span>第一次实际生产时间：</span><span>{{data.dycsjscsj}}</span></li>
               <li v-if="!ordershow"><span>最后实际生产时间：</span><span>{{data.zhsjscsj}}</span></li>
+              <li style="padding-top:15px"><span>理单负责人：</span><span>{{data.arrangeuser}}</span></li>
+              <li><span>跟单负责人：</span><span>{{data.trackuser}}</span></li>
+              
           </ul>
       </div>
       </div>

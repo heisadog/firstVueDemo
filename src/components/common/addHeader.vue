@@ -1,9 +1,7 @@
 <template>
-  <div>
       <ul class="madd-tab">
           <li v-for="data,index in list" :class='data.class'  @click="check(index)">{{data.name}}</li>
       </ul>
-  </div>
 </template>
 <script>
 export default {

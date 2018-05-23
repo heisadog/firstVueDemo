@@ -31,7 +31,8 @@
                     <span>{{data.sendqty}}</span>
                     <span>{{data.oprdatetime}}</span>
                     <span>
-                        <yd-lightbox-img class="wcnmlgb" slot="img" :src="data.packingpic" :onerror='defaultImg'></yd-lightbox-img>
+                        <!-- <yd-lightbox-img class="wcnmlgb" slot="img" :src="data.packingpic" :onerror='defaultImg'></yd-lightbox-img> -->
+                        <img class="wcnmlgb" slot="img" :src="data.packingpic" :onerror='defaultImg' @click="showbitimg(data.packingpic)">
                     </span>
                     <span :data-footId='4' :data-dtlid='data.dtlid' :data-mainid='data.mainid' 
                     :data-id='data.id' :data-imgurl='data.packingpic' :data-packingpic2='data.packingpic2' :data-sendbox='data.sendbox' :data-sendqty='data.sendqty' data-type="update"
@@ -46,7 +47,13 @@
                     :data-id='data.id' :data-imgurl='data.packingpic' :data-sendbox='data.sendbox' :data-sendqty='data.sendqty' data-type="update" @click="gotoEdit(index)">编辑</span>
                 </div> -->
             </div>
-        </div>        
+        </div>
+
+        <!-- 弹出大图 -->
+        <div class="yd-lightbox" v-if="isshowbigimg" @click="closebigimg">
+            <img :src="showbigimg" :onerror='defaultImg' alt="" @click="closebigimg">
+        </div>
+
     </div>
 
 
@@ -89,7 +96,9 @@ export default {
         isSendDtl:true,// 当 第五个模块的 发货数量为0 的时候 。隐藏表头
         datetime0: '',// (new Date()).getFullYear()+'-'+((new Date()).getMonth()+1)+'-'+(new Date()).getDate(), 即便是这样还是报错！！
         datetime1: '',
-        defaultImg: 'this.src="' + require('../assets/img/w.png') + '"'
+        defaultImg: 'this.src="' + require('../assets/img/w.png') + '"',
+        showbigimg:'',
+        isshowbigimg:false,
       }
     },
     created(){
@@ -256,7 +265,6 @@ export default {
                   if(AC_HEAD1[0].accessoryactualarrivedate){
                         _this.datetime1 = AC_HEAD1[0].accessoryactualarrivedate;
                   }  
-                  console.log(AC_HEAD4)
               } else {
                   // todo...[d.errorMessage]//AS_LOGINNAME,AS_LOGINPWD PHONEUSERLOGINQRY
                   console.log(d.errorMessage);
@@ -265,6 +273,13 @@ export default {
                   });
               }
           })
+        },
+        showbitimg:function(src){
+            this.showbigimg = src;
+            this.isshowbigimg = true;
+        },
+        closebigimg(){
+            this.isshowbigimg = false;
         }
     }
     

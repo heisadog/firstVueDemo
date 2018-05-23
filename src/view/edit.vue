@@ -1,38 +1,39 @@
 <template>
-  <div>
-      <div class="divline"><span>发货箱数</span> <input v-model="sendbox" type="tel" name="" id=""></div>
-      <div class="divline"><span>发货数量</span> <input v-model="sendqty" type="tel" name="" id=""></div>
-      <div class="divline divimg">
-          <span>装箱单图片</span>
-          <ul v-if="isAndroid" class="checkimg">
-              <li style="position: relative;">从相册选择
-                  <input id="checkimg" type="file" value="" capture="filesystem" @change="upload">
-              </li>
-              <li style="position: relative;">拍照
-                  <input id="checkimg" type="file" value="" accept="image/*" capture="filesystem"  @change="upload">
-              </li>
-          </ul>
-          <ul v-if="isIOS" class="checkimg">
-              <li style="position: relative;">选择图片
-                  <input id="checkimg" type="file" value=""  @change="upload">
-              </li>
-          </ul>
-    
-            <img id="img" :src="img" alt="">
-            <div class="imgclose" v-if="isShowImgCloseBtn" @click="deleteImg">
-                <span>-</span>
-            </div>
-          
+<div class="yd-flexview">
+    <div class="g-scrollview">
+        <div class="divline"><span>发货箱数</span> <input v-model="sendbox" type="tel" name="" id=""></div>
+        <div class="divline"><span>发货数量</span> <input v-model="sendqty" type="tel" name="" id=""></div>
+        <div class="divline divimg">
+            <span>装箱单图片</span>
+            <ul v-if="isAndroid" class="checkimg">
+                <li style="position: relative;">从相册选择
+                    <input id="checkimg" type="file" value="" capture="filesystem" @change="selectImg">
+                </li>
+                <li style="position: relative;">拍照
+                    <input id="checkimg" type="file" value="" accept="image/*" capture="filesystem"  @change="selectImg">
+                </li>
+            </ul>
+            <ul v-if="isIOS" class="checkimg">
+                <li style="position: relative;">选择图片
+                    <input id="checkimg" type="file" value=""  @change="selectImg">
+                </li>
+            </ul>
+                <canvas id="myCanvas" style="display: none"></canvas>
+                <img id="img" :src="img" alt="">
+                <div class="imgclose" v-if="isShowImgCloseBtn" @click="deleteImg">
+                    <span>-</span>
+                </div>
+            
+        </div>
       </div>
-
       <div class="m-button">
           <span class="m-but-master" @click="submit">提交</span>
       </div>
       <foot :idx = '4'></foot>
-  </div>
+</div>
 </template>
 <script>
-import {EXIF} from './exif.js'
+import './exif.js'
 export default {
   data(){
       return{
@@ -162,6 +163,7 @@ export default {
         //去获取拍照时的信息，解决拍出来的照片旋转问题
         EXIF.getData(file, function(){
             Orientation = EXIF.getTag(this, 'Orientation');
+            alert('旋转角度：'+Orientation)
         });
         // 看支持不支持FileReader
         if (!file || !window.FileReader) return;
@@ -198,6 +200,8 @@ export default {
         let img = this.imgname();
         let formData = new FormData();
         formData.append("src",$('#img').attr('src'));
+        //alert($('#img').attr('src'))
+        _this.ydui.loading.open('图片上传中');
         //console.log(formData.get("src"))
         $.ajax({
             //url:'http://192.168.20.102:8083/FY_APP_SVR/servlet/Base64FtpUploadPic?childpath=kuaifan/SendPic/C3CD53D038900/688638F231303965E0534414A8C07BA5/wfy&filename=111&extname=jpg',
@@ -211,10 +215,15 @@ export default {
                 var url = xhr.split('#@#@')[1];
                 _this.packImgUrl = "kuaifan/SendPic/"+_this.mainid+'/'+_this.dtlid+"/"+localStorage.loginname+"/"+img+'.'+_this.extname;
                 _this.uploadImgurl = xhr.split('#@#@')[1];
+                _this.ydui.loading.close();
                 console.log(_this.packImgUrl);
                 console.log(url);
             },
             error:function(e){
+                _this.ydui.loading.close();
+                _this.ydui.alert({
+                    mes:'上传失败'
+                    });
                 console.log(e)
             }
         });
@@ -340,6 +349,64 @@ export default {
       console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
       tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
       return ndata;
+    },
+    //上面的 从 upload 开始是网上一搜就出现的 案例 ，卧槽 实测在手机上 不压缩，而且 导入 exif的方式都是报错，最终还是回到原先的代码，
+    //将 exif 绑在window对象上 ，用原先的代码 处理~~ 用过多次 靠谱~~
+    selectImg:function(e){
+        let _this = this;
+        let files = e.target.files || e.dataTransfer.files;
+        let file = files[0]
+        console.log(file)
+        _this.extname = file.name.split('.')[1]
+        console.log(_this.extname)
+        _this.isShowImgCloseBtn = true;
+        var Orientation = null;
+        if (file) {
+            var rFilter = /^(image\/jpeg|image\/png)$/i; // 检查图片格式
+            console.log(file.type)
+            if (!rFilter.test(file.type)) {
+                alert("请选择jpeg、png格式的图片");
+                return;
+            }
+            //获取照片方向角属性，用户旋转控制
+            EXIF.getData(file, function() {
+                EXIF.getAllTags(this);
+                Orientation = EXIF.getTag(this, 'Orientation');
+                console.log('角度'+Orientation)
+            });
+            var oReader = new FileReader();
+            oReader.onload = function(e) {
+                var image = new Image();
+                image.src = e.target.result;
+                image.onload = function() {
+                    var expectWidth = this.naturalWidth;
+                    var expectHeight = this.naturalHeight;
+                    var calc = expectWidth / expectHeight;
+                    var canvas = document.getElementById('myCanvas');
+                    var ctx = canvas.getContext("2d");
+                    canvas.width = 600;
+                    canvas.height = (canvas.width)/calc;
+                    console.log('canvas数据'+canvas.width)
+                    var base64 = null;
+                    //修复ios
+                    if (Orientation == 6) {
+                        //alert('需要顺时针（向左）90度旋转');
+                        ctx.save(); //保存状态
+                        ctx.translate(canvas.width/2, canvas.height/2); //设置画布上的(0,0)位置，也就是旋转的中心点
+                        ctx.rotate(90 * Math.PI / 180); //把画布旋转90度
+                        // 执行Canvas的drawImage语句
+                        ctx.drawImage(image, -(canvas.width/2), -(canvas.height/2), canvas.width, canvas.height); //把图片绘制在画布translate之前的中心点，
+                        ctx.restore(); //恢复状态
+                    }else {
+                        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    }
+                    base64 = canvas.toDataURL("image/jpeg", 0.92);
+                    $("#img").attr("src", base64);
+                    _this.postImg()
+                };
+            };
+            oReader.readAsDataURL(file);
+        }
     },
 
     }
