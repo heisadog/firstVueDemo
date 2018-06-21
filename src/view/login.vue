@@ -16,12 +16,18 @@
       <div class="denglu" id="login" @click="login()">登 录</div>
     </div>
 </template>
+<style>
+#context{
+  position: fixed
+}
+</style>
+
 <script>
 export default {
   data() {
       return {
-        name: '',//wfy
-        password: '',//wfyerp
+        name: 'wfy',//wfy
+        password: 'wfyerp',//wfyerp
       }
     },
   name: 'App',

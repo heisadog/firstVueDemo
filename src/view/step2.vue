@@ -15,13 +15,13 @@
                 <yd-pullrefresh :callback="loadList" ref="pullrefreshDemo">
                     <yd-infinitescroll :callback="loadLists" ref="infinitescrollDemo">
                     <yd-list theme="4" v-for="(item, key) in list" :key="key" slot="list">
-                        <ul v-if="hasRes" class="m-tab-cover m-tab-dtl" @click="changeActive(key)" :data-id='item.id' 
+                        <ul v-if="hasRes" class="m-tab-cover m-tab-dtl" :data-id='item.id' 
                         :data-mainid='item.mainid' :data-orderid='item.orderid'>
-                            <li><img slot="img" :src="item.mainpicurl" :onerror='defaultImg'></li>
-                            <li class="selflex">{{item.ordercode}}</li>
-                            <li class="selflex">{{item.supplier}}</li>
-                            <li class="selflex" style="color:#3297fd"  @click="goDetail(item.id,item.mainid,item.orderid)">{{item.orderqty}}</li>
-                            <li class="selflex">{{item.contractdate}}</li>
+                            <li><img slot="img" :src="item.mainpicurl" :onerror='defaultImg' @click="showimg(item.mainpicurl)"></li>
+                            <li class="selflex" @click="changeActive(key)">{{item.ordercode}}</li>
+                            <li class="selflex" @click="changeActive(key)">{{item.supplier}}</li>
+                            <li class="selflex" style="color:#3297fd"  @click="goDetail(item.id,item.mainid,item.orderid)"><u>{{item.orderqty}}</u></li>
+                            <li class="selflex" @click="changeActive(key)">{{item.contractdate}}</li>
                         </ul>
                     </yd-list>
                     </yd-infinitescroll>
@@ -29,8 +29,12 @@
                 <pageError v-if="!hasRes" :msg='pageError'></pageError>   
        </div>
     </div>
+    <!-- 弹出大图 -->
+        <div class="yd-lightbox" v-if="isshowbigimg" @click="closebigimg">
+            <img :src="showbigimg" :onerror='defaultImg' alt="" @click="closebigimg">
+        </div>  
     <div class="m-button">
-        <span class="m-but-master" @click="submit">开裁</span>
+        <span class="m-but-master" @click="inputnum">开裁</span>
     </div>
     <foot :idx ='1'></foot>
 </div>
@@ -47,6 +51,8 @@ export default {
         searchSort:'desc',
         defaultImg: 'this.src="' + require('../assets/img/w.png') + '"',
         pageno:1,
+        showbigimg:'',
+        isshowbigimg:false,
       }
     },
     computed:{
@@ -65,8 +71,10 @@ export default {
     methods:{
         //x修改选中 vue的方式没搞明白怎么实现 先用jq 实现！！！从引入jq 到现在还没用过一次呢
         changeActive:function(index){
-            if($('.m-tab-dtl').eq(index).hasClass('check')) $('.m-tab-dtl').eq(index).removeClass('check')
-            else $('.m-tab-dtl').eq(index).addClass('check')
+            // if($('.m-tab-dtl').eq(index).hasClass('check')) $('.m-tab-dtl').eq(index).removeClass('check')
+            // else $('.m-tab-dtl').eq(index).addClass('check')
+            $('.m-tab-dtl').removeClass('check')
+            $('.m-tab-dtl').eq(index).addClass('check')
         },
         //搜索
         searchfn:function(key,asc){
@@ -151,6 +159,22 @@ export default {
             console.log(id);
             this.$router.push({path:'/stepdtl',query:{id:id,footId:'1',mainid:mainid,orderid:orderid}})//this.$route.path
         },
+        inputnum:function(){
+            $.login({
+                title: '开裁编辑',
+                text: '',
+                username: '',  // 默认用户名
+                password: '',  // 默认密码
+                onOK: function (username, password) {
+                    //点击确认
+                    console.log(username)
+                    console.log(password)
+                },
+                onCancel: function () {
+                    //点击取消
+                }
+            });
+        },
         // 提交
         submit:function(){
             //获取 要提交的数据 ----foreach 尚不能正确使用~~先用jq
@@ -210,6 +234,13 @@ export default {
                     });
                 }
             })
+        },
+        showimg:function(src){
+            this.showbigimg = src;
+            this.isshowbigimg = true;
+        },
+        closebigimg(){
+            this.isshowbigimg = false;
         }
     }
     

@@ -22,7 +22,7 @@
                     :data-orderno='item.orderno' :data-dycsjscsj='item.dycsjscsj' :data-jcsj='item.jcsj'
                     :data-percentage='item.percentage' :data-zhsjscsj='item.zhsjscsj'>
                         <li class="selflex adda">{{item.orderno}}</li>
-                        <li class="selflex adda" style="color:#3297fd">{{item.num_sumqry}}</li>
+                        <li class="selflex adda" style="color:#3297fd"><u>{{item.num_sumqry}}</u></li>
                         <li class="selflex adda">{{item.percentage}}</li>
                         <li class="selflex adda">{{item.dycsjscsj}}</li>
                         <li class="selflex adda">{{item.zhsjscsj}}</li>
@@ -48,7 +48,7 @@ export default {
             colorStatus:'',//颜色状态  
             size:'', //尺寸 
             pageno:1,
-            }
+        }
   },
   mounted(){
     

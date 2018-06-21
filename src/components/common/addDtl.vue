@@ -11,6 +11,7 @@
                 <li><span>颜色名称：</span><span>{{data.colorname}}</span></li>
             </ul>
         </div>
+        <div class="glin"></div>
         <p class="shownum" v-for='data in items'>总定量：<span>{{data.orderqty}}</span></p>
         <div class="showtable showfirst">
             <span v-for="data in table">{{data.style}}</span>

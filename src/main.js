@@ -43,6 +43,7 @@ import './assets/css/reset.css'
 import './assets/css/public.css'
 import './assets/font/iconfont.css'
 import './assets/css/style.css'
+import './assets/css/weui.min.css'
 
 import './assets/js/const.js' //定义全局变量
 import './assets/js/basic';

@@ -3,6 +3,7 @@
     <div class="g-scrollview">
       <addDtl :items="dtl,table"></addDtl>
       <div class="w98 addscolpart os">
+          <div class="glin"></div>
            <div v-if="ordershow">
                <p class="shownum" v-for='data in dtl'>进仓时间:<span>{{data.jcsj}}</span></p>
                 <div class="showtable" style='background-color: #f5f5f5;'>
@@ -23,15 +24,19 @@
                 <div class="showtable" style="border-top:none;">
                     <span v-for="data in lan3">{{data.num}}</span>
                 </div>
+                <div v-if="ordershow" class="glin"></div>
            </div>
 
            <ul class="dtlshtime" v-for="data in dtl">
               <li><span>百分比：</span><span>{{data.percentage}}%</span></li>
+              <div v-if="!ordershow" class="glin" style="margin-bottom:12px"></div>
               <li><span>工厂生产进度：</span><span>{{data.prodprogress}}</span></li>
+              <div v-if="!ordershow" class="glin" style="margin-bottom:12px"></div>
               <li><span>接单时间：</span><span>{{data.takeorderdate}}</span></li>
               <li><span>同意延迟最终时间：</span><span>{{data.enddatetime}}</span></li>
               <li v-if="!ordershow"><span>第一次实际生产时间：</span><span>{{data.dycsjscsj}}</span></li>
               <li v-if="!ordershow"><span>最后实际生产时间：</span><span>{{data.zhsjscsj}}</span></li>
+              <div class="glin"></div>
               <li style="padding-top:15px"><span>理单负责人：</span><span>{{data.arrangeuser}}</span></li>
               <li><span>跟单负责人：</span><span>{{data.trackuser}}</span></li>
               

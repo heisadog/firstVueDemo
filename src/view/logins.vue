@@ -16,6 +16,11 @@
       <div class="denglu" id="login" @click="login()">登 录</div>
     </div>
 </template>
+<style>
+#context{
+  position: fixed
+}
+</style>
 <script>
 //重新复制一份 分开2个路口~~更新程序方便 不需要更新2次
 export default {

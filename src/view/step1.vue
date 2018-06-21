@@ -15,21 +15,26 @@
             <yd-pullrefresh :callback="loadList" ref="pullrefreshDemo">
                 <yd-infinitescroll :callback="loadLists" ref="infinitescrollDemo">
                 <yd-list theme="4" v-for="(item, key) in list" :key="key"  slot="list">
-                    <ul v-if="hasRes" class="m-tab-cover m-tab-dtl" @click="changeActive(key)" :data-id='item.id' 
+                    <ul v-if="hasRes" class="m-tab-cover m-tab-dtl" :data-id='item.id' 
                     :data-mainid='item.mainid' :data-orderid='item.orderid'>
-                        <li><img slot="img" :src="item.mainpicurl" :onerror='defaultImg'></li>
-                        <li class="selflex">{{item.ordercode}}</li>
-                        <li class="selflex">{{item.supplier}}</li>
-                        <li class="selflex" style="color:#3297fd"  @click="goDetail(item.id,item.mainid,item.orderid)">{{item.orderqty}}</li>
-                        <li class="selflex">{{item.fabricarrivedate}}</li>
+                        <li><img slot="img" :src="item.mainpicurl" :onerror='defaultImg' @click="showimg(item.mainpicurl)"></li>
+                        <li class="selflex" @click="changeActive(key)">{{item.ordercode}}</li>
+                        <li class="selflex" @click="changeActive(key)">{{item.supplier}}</li>
+                        <li class="selflex" style="color:#3297fd"  @click="goDetail(item.id,item.mainid,item.orderid)"><u>{{item.orderqty}}</u></li>
+                        <li class="selflex" @click="changeActive(key)">{{item.fabricarrivedate}}</li>
                     </ul>
                 </yd-list>
                 </yd-infinitescroll> 
             </yd-pullrefresh>
             <pageError v-if="!hasRes" :msg='pageError'></pageError>  
        </div>
-    </div>   
+    </div>
+    <!-- 弹出大图 -->
+        <div class="yd-lightbox" v-if="isshowbigimg" @click="closebigimg">
+            <img :src="showbigimg" :onerror='defaultImg' alt="" @click="closebigimg">
+        </div>   
     <ul class="m-time">
+        <!-- <li><yd-datetime v-model="datetime6" :yearFormat="yearFormat" :month-format="monthFormat" :day-format="dayFormat" type="date"></yd-datetime></li> -->
         <li><span>面料实际到位时间</span><input type="text" id="start" readonly = 'readonly' unselectable="on" onfocus="this.blur()" class='yd-datetime-input' placeholder=""></input></yd-datetime></li>
         <li><span>辅料实际到位时间</span><input type="text" id="end" readonly = 'readonly' unselectable="on" onfocus="this.blur()" class='yd-datetime-input' placeholder=""></input></li>
     </ul>
@@ -51,6 +56,8 @@ export default {
         searchSort:'desc',
         defaultImg: 'this.src="' + require('../assets/img/w.png') + '"',
         pageno:1,
+        showbigimg:'',
+        isshowbigimg:false,
       }
     },
     computed:{
@@ -59,12 +66,6 @@ export default {
         },
     },
     mounted(){
-        // var mydate = new Date();
-        // var year = mydate.getFullYear();
-        // var month = mydate.getMonth() + 1;
-        // var day = mydate.getDate();
-        // var DateTime = year + '-' + month + '-' + day;
-        // this.datetime0 = this.datetime1 = DateTime;
         //this.getdata();
         //页面初始 数据状态是 false 标识未获取！或者过更新了状态但是 数据为空 ！此时执行获取 否则从 store中获取数据！！！
         // if(!this.$store.state.status.step1sta || this.$store.state.step1json.length == 0 || this.$store.state.backReload || this.$store.state.status.stepallsta) this.getdata()
@@ -78,6 +79,12 @@ export default {
         //初始化 时间插件
         init_datetimePicker:function () {
             let _this = this;
+            // var mydate = new Date();
+            // var year = mydate.getFullYear();
+            // var month = mydate.getMonth() + 1;
+            // var day = mydate.getDate();
+            // var DateTime = year + '-' + month + '-' + day;
+            //_this.datetime6  = DateTime;
             $("#start").datetimePicker({
                     title: '请选择时间',
                     times:function(){
@@ -263,6 +270,13 @@ export default {
                     });
                 }
             })
+        },
+        showimg:function(src){
+            this.showbigimg = src;
+            this.isshowbigimg = true;
+        },
+        closebigimg(){
+            this.isshowbigimg = false;
         }
     },
 

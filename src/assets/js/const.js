@@ -10,4 +10,4 @@ const basicUrl = {
 //设置给全局
 window.basicUrl = basicUrl;
 const htmlHeight = document.body.clientHeight;
-document.getElementsByTagName('html')[0].style.height = htmlHeight + 'px';
+document.getElementsByTagName('html')[0].style.height = (htmlHeight - 0) + 'px';

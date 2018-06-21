@@ -71,14 +71,13 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 50px;
+    height: 49px;
     border-top: 1px solid #CCC;
     text-align: center;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     background-color: #fff;
-    z-index: 100;
 }
 
 .footer li.on,
@@ -228,13 +227,10 @@
 }
 
 .m-main {
-    position: fixed;
-    left: 0;
-    top: 81px;
-    z-index: 48;
     width: 100%;
     height: calc(100% - 200px);
     height: -webkit-calc(100% - 200px);
+    margin-top: 81px;
 }
 
 .scolpart {}
@@ -643,13 +639,13 @@
 
 .divimg {
     position: relative;
-    height: 310px;
+    height: 270px;
 }
 
 .divimg img {
     float: right;
     width: 180px;
-    height: 240px;
+    height: 200px;
     margin-top: 16px;
     margin-right: 16px;
 }
@@ -897,11 +893,11 @@ a {
 
 .yd-lightbox {
     position: fixed;
+    width: 100%;
+    height: 100%;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1502;
+    z-index: 99999;
     background-color: #000;
     display: -webkit-box;
     display: -webkit-flex;
@@ -920,4 +916,11 @@ a {
     -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
+}
+
+.glin {
+    width: 100%;
+    height: 1px;
+    border-bottom: #CCC dashed 1px;
+    padding-top: 15px
 }

@@ -15,20 +15,24 @@
             <yd-pullrefresh :callback="loadList" ref="pullrefreshDemo">
                 <yd-infinitescroll :callback="loadLists" ref="infinitescrollDemo">
                 <yd-list theme="4" v-for="(item, key) in list" :key="key" slot="list">
-                    <ul v-if="hasRes" class="m-tab-cover m-tab-dtl" @click="changeActive(key)" :data-id='item.id' 
+                    <ul v-if="hasRes" class="m-tab-cover m-tab-dtl" :data-id='item.id' 
                     :data-mainid='item.mainid' :data-orderid='item.orderid'>
-                        <li><img slot="img" :src="item.mainpicurl" :onerror='defaultImg'></li>
-                        <li class="selflex">{{item.ordercode}}</li>
-                        <li class="selflex">{{item.supplier}}</li>
-                        <li class="selflex" style="color:#3297fd"  @click="goDetail(item.id,item.mainid,item.orderid)">{{item.orderqty}}</li>
-                        <li class="selflex">{{item.contractdate}}</li>
+                        <li><img slot="img" :src="item.mainpicurl" :onerror='defaultImg' @click="showimg(item.mainpicurl)"></li>
+                        <li class="selflex" @click="changeActive(key)">{{item.ordercode}}</li>
+                        <li class="selflex" @click="changeActive(key)">{{item.supplier}}</li>
+                        <li class="selflex" style="color:#3297fd"  @click="goDetail(item.id,item.mainid,item.orderid)"><u>{{item.orderqty}}</u></li>
+                        <li class="selflex" @click="changeActive(key)">{{item.contractdate}}</li>
                     </ul>
                 </yd-list>
                 </yd-infinitescroll>
             </yd-pullrefresh>
             <pageError v-if="!hasRes" :msg='pageError'></pageError>   
        </div>
-    </div>   
+    </div>
+    <!-- 弹出大图 -->
+        <div class="yd-lightbox" v-if="isshowbigimg" @click="closebigimg">
+            <img :src="showbigimg" :onerror='defaultImg' alt="" @click="closebigimg">
+        </div>     
     <div class="m-button">
         <span class="m-but-master" @click="submit">上线</span>
     </div>
@@ -47,6 +51,8 @@ export default {
         searchSort:'desc',
         defaultImg: 'this.src="' + require('../assets/img/w.png') + '"',
         pageno:1,
+        showbigimg:'',
+        isshowbigimg:false,
       }
     },
     computed:{
@@ -210,6 +216,13 @@ export default {
                     });
                 }
             })
+        },
+        showimg:function(src){
+            this.showbigimg = src;
+            this.isshowbigimg = true;
+        },
+        closebigimg(){
+            this.isshowbigimg = false;
         }
     }
     

@@ -3,6 +3,7 @@
     <div class="g-scrollview">
         <!-- 固定部分 -->
         <dtl :items="dtl,table,senddtl"></dtl>
+        
         <!-- 滚动部分 -->
         <div class="scolpart" :class='["fisdtl", {on:idx === 1} ]'>
             <ul class="dtlshtime" v-for="data in dtl" :key="dtl.id">
@@ -11,13 +12,14 @@
                 <li><span>大货样时间：</span><span>{{data.largecargodate}}</span></li>
                 <li><span>预估面料到位时间：</span><span>{{data.estfabricarrivedate}}</span></li>
                 <li><span>面料卡位时间：</span><span>{{data.fabricarrivedate}}</span></li>
+                <div class="glin"></div>
                 <!-- 此处模块一 是需要选择输入的  -->
                 <li v-if="idx != '0'" style="margin-top:10px;color:#1a1a1a"><span>面料实际到位时间：</span><span>{{data.fabricactualarrivedate}}</span></li>
                 <li v-if="idx != '0'" style="color:#1a1a1a"><span>辅料实际到位时间：</span><span>{{data.accessoryactualarrivedate}}</span></li>
             </ul>
-           
             <!-- 下面的 发货箱数 是第五个 模块 独有的 -->
             <div v-if="isSend">
+                <div class="glin"></div>
                 <div v-if="isSendDtl" class="shownumxs"  v-for='data in dtl'>已发货数量：<span>{{data.sendqty}}</span> <span style="float:right">已发货箱数：{{data.sendbox}}</span></div>
                 <div v-if="isSendDtl" class="showtable showfirst">
                     <span>发货箱数</span>
@@ -36,7 +38,7 @@
                     </span>
                     <span :data-footId='4' :data-dtlid='data.dtlid' :data-mainid='data.mainid' 
                     :data-id='data.id' :data-imgurl='data.packingpic' :data-packingpic2='data.packingpic2' :data-sendbox='data.sendbox' :data-sendqty='data.sendqty' data-type="update"
-                    @click="gotoEdit(index)" class="edit">编辑</span>
+                    @click="gotoEdit(index)" style="color:#3297fd" class="edit"><u>编辑</u></span>
                 </yd-lightbox>
                 <!-- <div class="showtable showsecond" v-for="data,index in senddtl" style="border-top:none">
                     <span>{{data.sendbox}}</span>
@@ -77,7 +79,7 @@
     <div class="m-button" v-else="idx === '4'">
         <!-- <span class="m-but-master" @click="gotoEdit">编辑</span>  编辑 -->
         <span class="m-but-master" @click="addEdit">发货</span> <!--新增编辑-->
-        <span class="m-but-master" @click="submit">发货完全</span>
+        <span class="m-but-master" @click="submit" style="background-color:#1664b3">发货完全</span>
     </div>
     <foot :idx ='0'></foot>
   </div>
