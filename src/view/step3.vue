@@ -34,8 +34,24 @@
             <img :src="showbigimg" :onerror='defaultImg' alt="" @click="closebigimg">
         </div>     
     <div class="m-button">
-        <span class="m-but-master" @click="submit">上线</span>
+        <span class="m-but-master" @click="showContent">上线</span>
     </div>
+
+    <yd-popup v-model="editQtyDiv" position="bottom" height="40%" >
+        <yd-cell-group style="min-width : 250px">
+            <yd-cell-item style ="margin-top : 20px">
+                <span slot="left" style = "font-size: 12px;">数量：</span>
+                <input slot="right" type="number" placeholder="" id="editQty"  class="yd-cell-right" style="height: 30px;font-size: 12px;">
+            </yd-cell-item>
+            <yd-cell-item style ="margin-top : 20px">
+                <span slot="left" style = "font-size: 12px;">备注：</span>
+                <input slot="right" type="text" placeholder="" id="editRemark" class="yd-cell-right" style="height: 30px;font-size: 12px;">
+            </yd-cell-item>
+        </yd-cell-group>
+        <div class="m-button">
+            <span class="m-but-master" @click="submit">提交</span>
+        </div>
+    </yd-popup>
     <foot :idx ='2'></foot>
 </div>
 </template>
@@ -53,6 +69,7 @@ export default {
         pageno:1,
         showbigimg:'',
         isshowbigimg:false,
+        editQtyDiv: false
       }
     },
     computed:{
@@ -101,7 +118,7 @@ export default {
             vOpr1Data.setValue("AS_USER_ID", localStorage.loginname);
             vOpr1Data.setValue("AS_DEPT_ID", '');
             vOpr1Data.setValue("AS_FUNC_NAME", "DOCUMENTARYTRACKINGLISTQRY");
-           vOpr1Data.setValue("AS_CONDITION",_this.searchKey);//input的搜索 供应商等
+            vOpr1Data.setValue("AS_CONDITION",_this.searchKey);//input的搜索 供应商等
             vOpr1Data.setValue("AS_SORT",_this.searchSort );//升 asc 降 desc
             vOpr1Data.setValue("AS_OPRFLAG",'3' );//1 2 3 4 5 底部标签
             vOpr1Data.setValue("AN_PAGESIZE",'20' );
@@ -157,6 +174,35 @@ export default {
             this.pageno ++;
             this.getdata()
         },
+        //显示填写数量和备注界面
+        showContent: function() {
+            let [id, mainid, orderid] = [[], [], []];
+            $(".m-main .m-tab-dtl").each(function() {
+                if ($(this).hasClass("check")) {
+                id.push($(this).attr("data-id"));
+                mainid.push($(this).attr("data-mainid"));
+                orderid.push($(this).attr("data-orderid"));
+                }
+            });
+            //简单验证~~~
+            if (id.length == 0) {
+                this.ydui.alert({
+                mes: "请先选择商品"
+                });
+                return false;
+            }
+
+            if (id.length > 1) {
+                this.ydui.alert({
+                mes: "请选择一个商品"
+                });
+                return false;
+            }
+            $("#editQty").val("");
+            $("#editRemark").val("");
+
+            this.editQtyDiv = true;
+        },
         // 提交
         submit:function(){
             //获取 要提交的数据 ----foreach 尚不能正确使用~~先用jq
@@ -170,9 +216,22 @@ export default {
                 }
             })
             //简单验证~~~
-            if(id.length == 0){
+            if ($("#editQty").val() == "") {
                 this.ydui.alert({
-                    mes:'请先选择商品'
+                mes: "开裁数量不能为空"
+                });
+                return false;
+            }
+            if (id.length > 1) {
+                this.ydui.alert({
+                mes: "请选择一个商品"
+                });
+                return false;
+            }
+            //简单验证~~~
+            if (id.length == 0) {
+                this.ydui.alert({
+                mes: "请先选择商品"
                 });
                 return false;
             }
@@ -191,6 +250,8 @@ export default {
                 obj.AS_FABRICACTUALARRIVEDATE = '';
                 obj.AS_ACCESSORYACTUALARRIVEDATE = '';
                 obj.AS_OPRFLAG = '3';
+                obj.AS_QTY = $("#editQty").val();
+                obj.AS_REMARK = $("#editRemark").val();
                 vOpr1Data.push(obj);
             }
             vOpr1.addDataArray(vOpr1Data)
@@ -207,6 +268,7 @@ export default {
                       _this.$store.commit('upstate','')
                        _this.pageno = 1;
                     _this.list = [];
+                    _this.editQtyDiv  = false;
                     _this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.reInit'); 
                     _this.getdata();//成功后更新了数据 页面会由vue实现重新展示剩余数据~~~
                 } else {

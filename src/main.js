@@ -39,6 +39,19 @@ Vue.component(ActionSheet.name, ActionSheet);
 import { InfiniteScroll } from 'vue-ydui/dist/lib.rem/infinitescroll';
 Vue.component(InfiniteScroll.name, InfiniteScroll);
 
+
+//add by zyz
+import { Popup } from 'vue-ydui/dist/lib.rem/popup';
+Vue.component(Popup.name, Popup);
+
+import { CellGroup, CellItem } from 'vue-ydui/dist/lib.rem/cell';
+Vue.component(CellGroup.name, CellGroup);
+Vue.component(CellItem.name, CellItem);
+
+import { TextArea } from 'vue-ydui/dist/lib.rem/textarea';
+Vue.component(TextArea.name, TextArea);
+//add end
+
 import './assets/css/reset.css'
 import './assets/css/public.css'
 import './assets/font/iconfont.css'
