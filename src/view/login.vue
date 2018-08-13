@@ -10,7 +10,7 @@
       </div>
       <div class="login_list" style="margin-top: 15px">
         <span>密码</span>
-        <input type="password" id="pwd" placeholder="请输入登录密码" v-model="password">
+        <input type="password" id="pwd" placeholder="请输入登录密码~" v-model="password">
         <div class="logdel none">&#xe646</div>
       </div>
       <div class="denglu" id="login" @click="login()">登 录</div>
