@@ -28,3 +28,5 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+# 项目在后期做了添加，view模块下加了其他的项目，公用一套，一个简单的查询！

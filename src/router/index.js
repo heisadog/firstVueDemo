@@ -10,13 +10,19 @@ export default new Router({
         component: App,
         children: [{
                 path: '/',
-                redirect: '/login'
+                redirect: '/oly/login'
             }, {
                 path: '/login',
                 meta: {
                     title: '生产跟进'
                 },
                 component: resolve => require(['@/view/login'], resolve)
+            }, {
+                path: '/oly/login',
+                meta: {
+                    title: '欧莱雅'
+                },
+                component: resolve => require(['@/view/oly/login'], resolve)
             },
             {
                 path: '/logins',
@@ -94,6 +100,31 @@ export default new Router({
                     title: '数据汇总'
                 },
                 component: resolve => require(['@/view/addDtl'], resolve)
+            },
+            { //下面是 欧莱雅项目的路由
+                path: '/oly/stock',
+                meta: {
+                    title: '欧莱雅'
+                },
+                component: resolve => require(['@/view/oly/stock'], resolve)
+            }, {
+                path: '/oly/member',
+                meta: {
+                    title: '欧莱雅'
+                },
+                component: resolve => require(['@/view/oly/member'], resolve)
+            }, {
+                path: '/oly/cost',
+                meta: {
+                    title: '欧莱雅'
+                },
+                component: resolve => require(['@/view/oly/cost'], resolve)
+            }, {
+                path: '/oly/sale',
+                meta: {
+                    title: '欧莱雅'
+                },
+                component: resolve => require(['@/view/oly/sale'], resolve)
             }
         ]
     }],

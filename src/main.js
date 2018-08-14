@@ -104,14 +104,25 @@ router.beforeEach((to, form, next) => {
     window.document.title = to.meta.title !== undefined ? to.meta.title : Vue.prototype.appName;
     next()
 });
+/*
+ * 2018.8.13新增 欧莱雅 项目 添加！开始
+ */
+import olycomponents from './view/oly/olycomponents/index';
+Object.keys(olycomponents).forEach((key) => {
+    Vue.component(key, olycomponents[key])
+});
+import './assets/css/css/oly.css'
 
+/*
+ * 欧莱雅设置结束
+ */
 /* eslint-disable no-new */
 new Vue({
     el: '#app',
     store,
     router,
     components: { App },
-    template: '<App/>'
+    template: '<App/>',
 })
 
 /**
