@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 //引入 第二个模块的 状态
 import addStore from './addStore'
 
+//2018-8-23 引入欧莱雅项目 状态
+import olyStore from './olyStore'
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
@@ -66,6 +68,7 @@ export default new Vuex.Store({
     },
     //将其他模块的 .....
     modules: {
-        addStore
+        addStore,
+        olyStore
     }
 })

@@ -47,6 +47,83 @@ i {
 }
 
 
+/*select 插件效果*/
+
+.jqex_cover {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99998;
+}
+
+.jqex_cover_black {
+    background-color: rgba(0, 0, 0, .6);
+}
+
+.jqex_selectBox {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    min-height: 20%;
+    max-height: 70%;
+    width: 100%;
+    background-color: #FFF;
+    z-index: 99999;
+}
+
+.item {
+    line-height: 45px;
+    border-bottom: 1px solid #efefef;
+}
+
+.items {
+    line-height: 30px;
+    border-bottom: 1px solid #efefef;
+    background-color: #FFF;
+    text-align: left;
+    padding: 5px 12px;
+    position: relative;
+}
+
+.itemsactive::after {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    content: '\e717';
+    font-family: wfyfont;
+    font-size: 40px;
+    line-height: 40px;
+    color: rgba(0, 136, 255, 1);
+}
+
+.jqex_btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    line-height: 50px;
+    text-align: center;
+    font-size: 18px;
+    background-color: #FFF;
+}
+
+.jqex_btn li {
+    float: left;
+    width: 25%;
+}
+
+.bggray {
+    background-color: #f1f1f1;
+}
+
+.jqex_multi_box {
+    height: calc(100% - 50px);
+    height: -webkit-calc(100% - 50px);
+}
+
+
 /*插件之 页脚*/
 
 footer {

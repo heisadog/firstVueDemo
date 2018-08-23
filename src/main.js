@@ -112,7 +112,8 @@ Object.keys(olycomponents).forEach((key) => {
     Vue.component(key, olycomponents[key])
 });
 import './assets/css/css/oly.css'
-
+import './assets/js/jqueryextend';
+Vue.prototype.isShowConsolelog = true;
 /*
  * 欧莱雅设置结束
  */
