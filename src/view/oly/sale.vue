@@ -3,15 +3,12 @@
         <lefttab></lefttab>
         <heads></heads>
         <ul class="oly_tab_li">
-            <li class="oly_check">店员业绩</li>
-            <li>店铺业绩</li>
-            <li>商品详情</li>
-            <li>热销时段</li>
+            <li v-for="(data,index) in tap" :class='[{ oly_check : index === tapindex }]' @click="oly_check(index)">{{data}}</li>
        </ul>
         <ul class="oly_dtl_title">
-            <li v-for="item in table2">{{item}}</li>
+            <li v-for="item in table">{{item}}</li>
         </ul>
-       <div class="">
+       <div class="view_box_list os" id="list" style="top:118px;bottom:0px">
             
        </div>
        
@@ -22,8 +19,8 @@
             <ul class="topSearchBox">
                 <li>
                     <span>店铺</span>
-                    <input type="text" id="ks" readonly="readonly" @click="chwldm" :data-code='checkWldm.toString()' :data-mc='checkWlmc.toString()' v-model="checkWlmc.toString()" placeholder="请选择店铺">
-                    <div class="delethis"></div>
+                    <input type="text" id="jq_wldm" readonly="readonly" @click="chwldm" :data-code='checkWldm.toString()' :data-mc='checkWlmc.toString()' v-model="checkWlmc.toString()" placeholder="请选择店铺">
+                    <div class="delethis" @click="deletewl"></div>
                 </li>
                 <li>
                     <span>开始日期</span>
@@ -36,11 +33,12 @@
                     <div class="delethis"></div>
                 </li>
                 <div class="topSearchBtn">
-                    <span id="clear">清 除</span>
-                    <span id="searbtn">查 询</span>
+                    <span @click="inputAllClaer">清 除</span>
+                    <span @click="dtlsearch">查 询</span>
                 </div>
             </ul>
         </div>
+        <!--  -->
         <div id="coverBackt" class="pf none covert" @click="closezt"></div>
         <div id="multi_box" class="jqex_selectBox y100 thd ts200">
             <div class="os jqex_multi_box" style="height: 300px">
@@ -57,24 +55,33 @@
     </div>
 </template>
 <script>
-import './fun.js'
+import { fun } from './fun.js';
 export default {
     data(){
         return{
-            table:[],
-            table1:['店铺','店员','数量','业绩'],
-            table2:['店铺','数量','业绩','贡献率'],
-            table3:['商品编码','数量','业绩'],
-            table4:['时间','数量','业绩'],
+            tap:['店员业绩','店铺业绩','商品详情','热销时段'],
+            tapindex:0,
+            table:[],//承载表头！
+            table0:['店铺','店员','数量','业绩'],
+            table1:['店铺','数量','业绩','贡献率'],
+            table2:['商品编码','数量','业绩'],
+            table3:['时间','数量','业绩'],
             wldm:JSON.parse(localStorage.wllist),
             checkWldm:[],//已经选中的往来代码
             checkWlmc:[],//已经选中的往来名称
+            total_num:0,//查询结果总金额和数量
+            total_je:0
         }
     },
     mounted() {
         // console.log(this.$store)
         // console.log(this.$store.state.olyStore.stocklist[0])
         console.log(this.wldm[0]);
+        //默认表头 选择 第一个 数据 table1
+        this.table = this.table0;
+        this.$nextTick(() => { /* code */
+            this.dtlsearch()
+        })
     },
     methods:{
         showzt(){
@@ -84,6 +91,16 @@ export default {
         closezt(){
             $('#coverBackt').addClass('none');
             $('#multi_box').addClass('y100')
+        },
+        //点击切换标签
+        oly_check(index){
+            if (this.tapindex == index) return;
+            this.tapindex = index;
+            //更换表头
+            let tables = 'table'+index;
+            this.table = this[tables];
+            //查询
+            this.dtlsearch();
         },
         //点击选择店铺
         chwldm(){
@@ -104,10 +121,11 @@ export default {
             console.error(this.checkWlmc);
         },
         all(){
+            const _this = this;
             $('.jqex_multi_box .item').each(function(){
                 $(this).addClass('bule01AAEF');
-                this.checkWldm.push($(this).attr('data-code'));
-                this.checkWlmc.push($(this).attr('data-dmmc'));
+                _this.checkWldm.push($(this).attr('data-code'));
+                _this.checkWlmc.push($(this).attr('data-dmmc'));
             })
         },
         allclear(){
@@ -121,30 +139,116 @@ export default {
         cancle(){
             this.closezt();
         },
+        //单独删除 店铺
+        deletewl(){
+            $('.delethis').click(function(){
+                $(this).prev().val('');
+            })
+            this.checkWldm = [];
+            this.checkWlmc = [];
+            $('.jqex_multi_box .item').removeClass('bule01AAEF');
+        },
+        //全清理
+        inputAllClaer(){
+            $('.topSearchBox').find('input').val('');
+            this.checkWldm = [];
+            this.checkWlmc = [];
+            $('.jqex_multi_box .item').removeClass('bule01AAEF');
+        },
+        //搜索
         dtlsearch(){
             const _this = this;
-            var vBiz = new FYBusiness("biz.sale.emp.qry");
+            fun.csear();
+            var vBiz = new D.FYBusiness("biz.sale.emp.qry");
             var vOpr1 = vBiz.addCreateService("svc.sale.emp.qry", false);
             var vOpr1Data = vOpr1.addCreateData();
-            vOpr1Data.setValue("AS_USERID", this.userid);
-            vOpr1Data.setValue("AS_WLDM",this.wldm);
+            vOpr1Data.setValue("AS_USERID", localStorage.userid);
+            vOpr1Data.setValue("AS_WLDM",localStorage.wldm);
             vOpr1Data.setValue("AS_FUNC", "svc.sale.emp.qry");
-            vOpr1Data.setValue("AS_QSRQ", "");
-            vOpr1Data.setValue("AS_JZRQ", "");
-            vOpr1Data.setValue("AS_XTWLDM", "");
-            vOpr1Data.setValue("AS_TYPE", "");
-            vOpr1Data.setValue("AN_PSIZE", "");
-            vOpr1Data.setValue("AN_PINDEX", "");
-            var ip = new InvokeProc();
+            vOpr1Data.setValue("AS_QSRQ", $('#start').val() || '');
+            vOpr1Data.setValue("AS_JZRQ", $('#end').val() || '');
+            vOpr1Data.setValue("AS_XTWLDM",$('#jq_wldm').attr('data-code'));
+            vOpr1Data.setValue("AS_TYPE", (_this.tapindex+1));
+            vOpr1Data.setValue("AN_PSIZE", "100");
+            vOpr1Data.setValue("AN_PINDEX", "1");
+            var ip = new D.InvokeProc();
             ip.addBusiness(vBiz);
+            _this.isShowConsolelog ? console.log(JSON.stringify(ip)) :'';
             ip.invoke(function(d){
                 if ((d.iswholeSuccess == "Y" || d.isAllBussSuccess == "Y")) {
                     // todo...
+                    let list = vOpr1.getResult(d, "AC_RESULT1").rows;
+                    _this.total_num = vOpr1.getOutputPermeterMapValue(d, "AN_SL");
+                    _this.total_je = vOpr1.getOutputPermeterMapValue(d, "AN_JE");
+                    console.log(list);
+                    console.log(_this.total_num);
+                    console.log(_this.total_je);
+                    _this.showdatadtl(list);
                 } else {
                     // todo...[d.errorMessage]
+                    _this.isShowConsolelog ? console.log(d.errorMessage) :'';
+                    // _this.ydui.alert({
+                    //     'mes':'登录失败，获取门店失败'
+                    // })
                 }
             }) ;
-        }
+        },
+        //处理结果集
+        showdatadtl(result){
+            var html ="";
+            const _this = this;
+            if( result.length ==0){
+                html = fun.zero();
+            }
+            switch (_this.tapindex) {
+                case 0:
+                    for (let i = 0; i < result.length; i++) {
+                        let bl = Math.round(result[i].kcssje / _this.total_je * 10000) / 100.00;
+                        html +='<ul class="stock_head_sell">'+
+                            '<li>'+result[i].xtwlmc+'</li>'+
+                            '<li>'+result[i].xtyhxm+'</li>'+
+                            '<li>'+fun.setTwoNum(result[i].kcssje)+'</li>'+
+                            '<li>' + bl + '%</li>'+
+                            '</ul>';
+                    }
+                    break;
+                case 1:
+                    for (let i = 0; i < result.length; i++) {
+                        let bl = Math.round(result[i].kcssje / _this.total_je * 10000) / 100.00;
+                        html +='<ul class="stock_head_sell">'+
+                            '<li>'+result[i].xtwlmc+'</li>'+
+                            '<li>'+result[i].row_num+'</li>'+
+                            '<li>'+fun.setTwoNum(result[i].kcssje)+'</li>'+
+                            '<li>' + bl + '%</li>'+
+                            '</ul>';
+                    }
+                    break;
+                case 2:
+                    for (let i = 0; i < result.length; i++) {
+                        html +='<ul class="stock_head_sell" style="border-bottom:none">'+
+                            '<li>'+result[i].xtwpdm+'</li>'+
+                            '<li>'+result[i].row_num+'</li>'+
+                            '<li>'+fun.setTwoNum(result[i].kcssje)+'</li>'+
+                            '</ul>'+
+                            '<div class="wfyitem_line">'+
+                            '<span style="margin-left: 0;">'+(result[i].xtwpmc)+'</span>'+
+                            '</div>';
+                    }
+                    break;
+                case 3:
+                    for (let i = 0; i < result.length; i++) {
+                        html +='<ul class="stock_head_sell">'+
+                            '<li>'+result[i].kcczrq+'</li>'+
+                            '<li>'+result[i].row_num+'</li>'+
+                            '<li>'+fun.setTwoNum(result[i].kcssje)+'</li>'+
+                            '</ul>';
+                    }
+                    break;        
+                default:
+                    break;
+            }
+            $('#list').html(html);
+        },
     }
 }
 </script>

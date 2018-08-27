@@ -1,9 +1,9 @@
 <template>
     <div>
         <header id="top" class="main_bgcolor">
-            <div @click="showleft" class="back">&#xe8f1</div>
+            <div @click="showleft" class="back" style="font-size:20px">&#xe650</div>
             <span>{{name}}</span>
-            <div class="search" @click="showSearch">查询</div>
+            <div class="search" @click="showSearch">&#xe620</div>
         </header>
     </div>
 </template>
@@ -19,12 +19,6 @@ export default {
         this.$nextTick(() => { /* code */
             this.init_datetimePicker();
             this.name  = this.$route.query.title;
-            $('.delethis').click(function(){
-                $(this).prev().val('');
-            })
-            $('#clear').click(function(){
-                $('.topSearchBox').find('input').val('');
-            })
             $('#cover').click(function(){
                 fun.csear()
             })

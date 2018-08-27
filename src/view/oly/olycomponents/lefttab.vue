@@ -2,7 +2,7 @@
     <div class="oly_left_side thd x_100 ts200" id="left">
         <div class="oly_left_side_cont">
             <p>导航菜单
-                <span @click="closeleft">x</span>
+                <span @click="closeleft">&#xe646</span>
             </p>
             <ul class="oly_left_list" v-for="item in list">
                 <li :data-url='item.url' @click="goto(item.url,item.name)">{{item.name}}</li>
@@ -14,10 +14,12 @@
 export default {
     data(){
         return{
-            list:[{'name':'销售业绩','url':'sale'},
-            {'name':'库存','url':'stock'},
-            {'name':'会员及消费','url':'member'},
-            {'name':'成本利润','url':'cost'}]
+            list:[
+                {'name':'销售业绩','url':'sale'},
+                {'name':'库存','url':'stock'},
+                {'name':'会员及消费','url':'member'},
+            // {'name':'成本利润','url':'cost'}
+            ]
         }
     },
     methods:{

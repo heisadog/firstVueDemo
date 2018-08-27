@@ -105,8 +105,10 @@ i {
     right: 0;
     line-height: 50px;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px;
     background-color: #FFF;
+    color: #01AAEF;
+    border-top: #01AAEF solid 1px;
 }
 
 .jqex_btn li {

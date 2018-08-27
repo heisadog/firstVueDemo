@@ -3,22 +3,18 @@
         <lefttab></lefttab>
         <heads></heads>
         <ul class="oly_tab_li">
-            <li class="oly_check">新增会员统计</li>
-            <li>店铺会员统计</li>
-            <li>会员消费统计</li>
+            <li v-for="(data,index) in tap" :class='[{ oly_check : index === tapindex }]' @click="oly_check(index)">{{data}}</li>
         </ul>
         <ul class="oly_dtl_title">
-            <li v-for="item in table2">{{item}}</li>
+            <li v-for="item in table">{{item}}</li>
         </ul>
-     
-    
-       <div class="os" style="height: calc(100% - 280px);height: -webkit-calc(100% - 280px);">
-           <ul class="m-tab-cover m-tab-dtl">
+       <div class="view_box_list os" id="list" style="top:118px;bottom:0px">
+           <!-- <ul class="m-tab-cover m-tab-dtl">
                 <li class="selflex" >{ordercode}</li>
                 <li class="selflex">.supplier}}</li>
                 <li class="selflex" style="color:#3297fd"><u>.orderqty}}</u></li>
                 <li class="selflex">.fabricarrivedate}}</li>
-            </ul>
+            </ul> -->
        </div>
 
        <!-- 下拉选择框 -->
@@ -28,8 +24,8 @@
             <ul class="topSearchBox">
                 <li>
                     <span>店铺</span>
-                    <input type="text" id="ks" readonly="readonly" placeholder="请选择店铺">
-                    <div class="delethis"></div>
+                    <input type="text" id="jq_wldm" readonly="readonly" @click="chwldm" :data-code='checkWldm.toString()' :data-mc='checkWlmc.toString()' v-model="checkWlmc.toString()" placeholder="请选择店铺">
+                    <div class="delethis" @click="deletewl"></div>
                 </li>
                 <li>
                     <span>开始日期</span>
@@ -42,28 +38,194 @@
                     <div class="delethis"></div>
                 </li>
                 <div class="topSearchBtn">
-                    <span id="clear">清 除</span>
-                    <span id="searbtn">查 询</span>
+                    <span @click="inputAllClaer">清 除</span>
+                    <span @click="dtlsearch">查 询</span>
                 </div>
+            </ul>
+        </div>
+        <!--  -->
+        <div id="coverBackt" class="pf none covert" @click="closezt"></div>
+        <div id="multi_box" class="jqex_selectBox y100 thd ts200">
+            <div class="os jqex_multi_box" style="height: 300px">
+                <div class="item" v-for="(data,key) in wldm" :data-code='data.xtwldm' :data-dmmc='data.xtwlmc' @click="checkitem(key,data.xtwldm,data.xtwlmc)">{{data.xtwlmc}}</div>
+            </div>
+            <div style="height: 50px"></div>
+            <ul class="jqex_btn thd ts200">
+                <li @click="all">全选</li>
+                <li @click="allclear">全清</li>
+                <li @click="sure">确认</li>
+                <li @click="cancle">取消</li>
             </ul>
         </div>
     </div>
 </template>
 <script>
-import './fun.js'
+import { fun } from './fun.js';
 export default {
     data(){
         return{
-            table:[],
-            table1:['店铺','办卡店员','数量'],
-            table2:['店铺','数量','新增会员'],
-            table3:['会员消费数','会员消费额','非会员消费数','非会员消费额'],
+            tap:['新增会员统计','店铺会员统计','会员消费统计'],
+            tapindex:0,
+            table:[],//承载表头！
+            table0:['店铺','办卡店员','数量'],
+            table1:['店铺','数量','新增会员'],
+            table2:['会员消费数','会员消费额','非会员消费数','非会员消费额'],
+            wldm:JSON.parse(localStorage.wllist),
+            checkWldm:[],//已经选中的往来代码
+            checkWlmc:[],//已经选中的往来名称
         }
     },
     mounted() {
-        
+        //默认表头 选择 第一个 数据 table1
+        this.table = this.table0;
+        this.$nextTick(() => { /* code */
+            this.dtlsearch()
+        })
     },
-    methods:{}
+    methods:{
+        showzt(){
+            $('#coverBackt').removeClass('none');
+            $('#multi_box').removeClass('y100');
+            },
+        closezt(){
+            $('#coverBackt').addClass('none');
+            $('#multi_box').addClass('y100')
+        },
+        //点击选择店铺
+        chwldm(){
+            this.showzt();
+        },
+        //点击切换标签
+        oly_check(index){
+            if (this.tapindex == index) return;
+            this.tapindex = index;
+            //更换表头
+            let tables = 'table'+index;
+            this.table = this[tables];
+            //查询
+            this.dtlsearch();
+        },
+        //弹出店铺点击效果
+        checkitem(index,code,mc){
+            if($('.jqex_multi_box .item').eq(index).hasClass('bule01AAEF')){
+                $('.jqex_multi_box .item').eq(index).removeClass('bule01AAEF');
+                this.checkWldm.remove(code);
+                this.checkWlmc.remove(mc);
+            } else{
+                $('.jqex_multi_box .item').eq(index).addClass('bule01AAEF');
+                this.checkWldm.push(code);
+                this.checkWlmc.push(mc);
+            }
+            console.error(this.checkWldm);
+            console.error(this.checkWlmc);
+        },
+        all(){
+            const _this = this;
+            $('.jqex_multi_box .item').each(function(){
+                $(this).addClass('bule01AAEF');
+                _this.checkWldm.push($(this).attr('data-code'));
+                _this.checkWlmc.push($(this).attr('data-dmmc'));
+            })
+        },
+        allclear(){
+            $('.jqex_multi_box .item').removeClass('bule01AAEF');
+            this.checkWldm = [];
+            this.checkWlmc = [];
+        },
+        sure(){
+            this.closezt();
+        },
+        cancle(){
+            this.closezt();
+        },
+        //单独删除 店铺
+        deletewl(){
+            $('.delethis').click(function(){
+                $(this).prev().val('');
+            })
+            this.checkWldm = [];
+            this.checkWlmc = [];
+            $('.jqex_multi_box .item').removeClass('bule01AAEF');
+        },
+        //全清理
+        inputAllClaer(){
+            $('.topSearchBox').find('input').val('');
+            this.checkWldm = [];
+            this.checkWlmc = [];
+            $('.jqex_multi_box .item').removeClass('bule01AAEF');
+        },
+        dtlsearch(){
+            const _this = this;
+            fun.csear();
+            var vBiz = new D.FYBusiness("biz.crm.add.sale.qry");
+            var vOpr1 = vBiz.addCreateService("svc.crm.add.sale.qry", false);
+            var vOpr1Data = vOpr1.addCreateData();
+            vOpr1Data.setValue("AS_USERID", localStorage.userid);
+            vOpr1Data.setValue("AS_WLDM", localStorage.wldm);
+            vOpr1Data.setValue("AS_FUNC", "svc.crm.add.sale.qry");
+            vOpr1Data.setValue("AS_XTWLDM", $('#jq_wldm').attr('data-code'));
+            vOpr1Data.setValue("AS_QSRQ", $('#start').val() || '');
+            vOpr1Data.setValue("AS_JZRQ", $('#end').val() || '');
+            vOpr1Data.setValue("AS_CXFS",(_this.tapindex+1));
+            vOpr1Data.setValue("AN_PSIZE", "100");
+            vOpr1Data.setValue("AN_PINDEX", "1");
+            var ip = new D.InvokeProc();
+            ip.addBusiness(vBiz);
+            _this.isShowConsolelog ? console.log(JSON.stringify(ip)) :'';
+            ip.invoke(function(d){
+                if ((d.iswholeSuccess == "Y" || d.isAllBussSuccess == "Y")) {
+                    let list = vOpr1.getResult(d, "CA_HYXX").rows;
+                    console.log(list);
+                    _this.showdatadtl(list)
+                    // todo...
+                } else {
+                    // todo...[d.errorMessage]
+                    _this.isShowConsolelog ? console.log(d.errorMessage) :'';
+                }
+            }) ;
+        },
+        //处理结果集
+        showdatadtl(result){
+            var html ="";
+            const _this = this;
+            if( result.length ==0){
+                html = fun.zero();
+            }
+            switch (_this.tapindex) {
+                case 0:
+                    for (let i = 0; i < result.length; i++) {
+                        html +='<ul class="stock_head_sell">'+
+                            '<li>'+result[i].xtwlmc+'</li>'+
+                            '<li>'+result[i].khjkry+'</li>'+
+                            '<li>'+result[i].xzhysl+'</li>'+
+                            '</ul>';
+                    }
+                    break;
+                case 1:
+                    for (let i = 0; i < result.length; i++) {
+                        html +='<ul class="stock_head_sell">'+
+                            '<li>'+result[i].xtwlmc+'</li>'+
+                            '<li>'+result[i].mdhysl+'</li>'+
+                            '<li>'+(result[i].xzhysl)+'</li>'+
+                            '</ul>';
+                    }
+                    break;
+                case 2:
+                    for (let i = 0; i < result.length; i++) {
+                        html +='<ul class="stock_head_sell">'+
+                            '<li>'+result[i].hyxfcs+'</li>'+
+                            '<li>'+fun.setTwoNum(result[i].hyxfje)+'</li>'+
+                            '<li>'+(result[i].fhyxfcs)+'</li>'+
+                            '<li>'+fun.setTwoNum(result[i].fhyxfje)+'</li>'+
+                            '</ul>';
+                    }
+                    break; 
+                default:
+                    break;
+            }
+            $('#list').html(html);
+        },
+    }
 }
 </script>
 
