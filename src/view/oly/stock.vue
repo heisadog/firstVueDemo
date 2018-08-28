@@ -8,9 +8,14 @@
         <ul class="oly_dtl_title">
             <li v-for="item in table">{{item}}</li>
         </ul>
-        <div class="view_box_list os" id="list" style="top:118px;bottom:0px;height:calc(100% - 118px);height:-webkit-calc(100% - 118px)">
-            
-       </div>
+        
+        <div class="view_box_list os"  style="top:118px;bottom:0px;height:calc(100% - 101px);height:-webkit-calc(100% - 101px)">
+            <div id="list"></div>
+            <div class="scrollload none" id="scrollload">
+                <div class="scrollload_img"></div>
+                <span>正在加载更多内容</span>
+            </div>
+        </div>
 
         <!-- 下拉选择框 -->
         <div id="cover" class="pf cover none" style="z-index: 80"></div>
@@ -29,7 +34,7 @@
                 </li>
                 <div class="topSearchBtn">
                     <span @click="inputAllClaer">清 除</span>
-                    <span @click="dtlsearch">查 询</span>
+                    <span @click="clickdtlsearch">查 询</span>
                 </div>
             </ul>
         </div>
@@ -63,17 +68,39 @@ export default {
             ckdm:JSON.parse(localStorage.cklist),
             checkCKdm:[],//已经选中的往来代码
             checkCKmc:[],//已经选中的往来名称
+            page:1,
+            pageSize:30,
         }
     },
     mounted() {
        //默认表头 选择 第一个 数据 table1
         this.table = this.table0;
-        console.log(this.ckdm)
         this.$nextTick(() => { /* code */
-            this.dtlsearch()
+            this.dtlsearch();
+            this.ready();
         })
+        
     },
     methods:{
+        ready(){
+            var loading = false;  //状态标记
+            const _this = this;
+            $('.view_box_list').scroll(function(){
+                console.log($("#list").Scroll());
+                if ($("#list").Scroll() < 0) {
+                    if(!$("#scrollload").hasClass("none")){
+                        loading = true;
+                    }
+                    setTimeout(function () {
+                        if(loading ){
+                            _this.page ++;
+                            _this.dtlsearch();
+                            loading = false;
+                        }
+                    },10);
+                }
+            })
+        },
         showzt(){
             $('#coverBackt').removeClass('none');
             $('#multi_box').removeClass('y100');
@@ -93,6 +120,11 @@ export default {
             //更换表头
             let tables = 'table'+index;
             this.table = this[tables];
+            //重置内容
+            $('#list').html('');
+            $("#scrollload").addClass("none");
+            $("#scrollload span").html("正在加载");
+            this.page = 1;
             //查询
             this.dtlsearch();
         },
@@ -145,9 +177,17 @@ export default {
             this.checkCKmc = [];
             $('.jqex_multi_box .item').removeClass('bule01AAEF');
         },
+        clickdtlsearch(){
+            $('#list').html('');
+            $("#scrollload").addClass("none");
+            $("#scrollload span").html("正在加载");
+            this.page = 1;
+            this.dtlsearch();
+        },
         dtlsearch(){
             const _this = this;
             fun.csear();
+            _this.ydui.loading.open('数据加载...')
             var vBiz = new D.FYBusiness("biz.inv.pda.qry");
             var vOpr1 = vBiz.addCreateService("svc.inv.pda.qry", false);
             var vOpr1Data = vOpr1.addCreateData();
@@ -155,8 +195,8 @@ export default {
             vOpr1Data.setValue("AS_WLDM", localStorage.wldm);
             vOpr1Data.setValue("AS_FUNC", "svc.inv.pda.qry");
             vOpr1Data.setValue("AS_WPDM", _this.sear_wpdm);
-            vOpr1Data.setValue("AN_PSIZE", "30");
-            vOpr1Data.setValue("AN_PINDEX", "1");
+            vOpr1Data.setValue("AN_PSIZE", _this.pageSize);
+            vOpr1Data.setValue("AN_PINDEX", _this.page);
             vOpr1Data.setValue("AS_KCCKDM", $('#jq_wldm').attr('data-code'));
             vOpr1Data.setValue("AS_CXFS", _this.tapindex== 0 ? 'CK' : 'HZ');
             var ip = new D.InvokeProc();
@@ -165,8 +205,9 @@ export default {
             ip.invoke(function(d){
                 if ((d.iswholeSuccess == "Y" || d.isAllBussSuccess == "Y")) {
                     let list = vOpr1.getResult(d, "AC_KC").rows;
-                    console.log(list);
-                    _this.showdatadtl(list)
+                    _this.isShowConsolelog ? console.log(list) :'';
+                    _this.showdatadtl(list);
+                    _this.ydui.loading.close();
                     // todo...
                 } else {
                     // todo...[d.errorMessage]
@@ -178,7 +219,7 @@ export default {
         showdatadtl(result){
             var html ="";
             const _this = this;
-            if( result.length ==0){
+            if( result.length ==0 && _this.page ==1 ){
                 html = fun.zero();
             }
             switch (_this.tapindex) {
@@ -211,7 +252,17 @@ export default {
                 default:
                     break;
             }
-            $('#list').html(html);
+            $('#list').append(html);
+            if(result.length == _this.pageSize){
+                $("#scrollload").removeClass("none");
+            }
+            if( _this.page > 1 && result.length ==0){
+                $("#scrollload span").html("没有更多了...");
+                setTimeout(function () {
+                    $("#scrollload").addClass("none");
+                    $("#scrollload span").html("正在加载");
+                },1000);
+            }
         },
     }
 }

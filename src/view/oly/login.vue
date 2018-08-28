@@ -35,8 +35,8 @@
 export default {
   data() {
       return {
-        name: 'system',///wfyerp
-        password: '666666',//wfyerp
+        name: '',///system
+        password: '',//666666
         authtype:'',
         zt:[],
       }

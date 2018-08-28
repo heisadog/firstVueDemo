@@ -8,9 +8,13 @@
         <ul class="oly_dtl_title">
             <li v-for="item in table">{{item}}</li>
         </ul>
-       <div class="view_box_list os" id="list" style="top:118px;bottom:0px">
-            
-       </div>
+       <div class="view_box_list os"  style="top:118px;bottom:0px;height:calc(100% - 118px);height:-webkit-calc(100% - 118px)">
+            <div id="list"></div>
+            <div class="scrollload none" id="scrollload">
+                <div class="scrollload_img"></div>
+                <span>正在加载更多内容</span>
+            </div>
+        </div>
        
        <!-- 下拉选择框 -->
         <div id="cover" class="pf cover none" style="z-index: 80"></div>
@@ -34,7 +38,7 @@
                 </li>
                 <div class="topSearchBtn">
                     <span @click="inputAllClaer">清 除</span>
-                    <span @click="dtlsearch">查 询</span>
+                    <span @click="clickdtlsearch">查 询</span>
                 </div>
             </ul>
         </div>
@@ -70,20 +74,41 @@ export default {
             checkWldm:[],//已经选中的往来代码
             checkWlmc:[],//已经选中的往来名称
             total_num:0,//查询结果总金额和数量
-            total_je:0
+            total_je:0,
+            page:1,
+            pageSize:30,
         }
     },
     mounted() {
         // console.log(this.$store)
         // console.log(this.$store.state.olyStore.stocklist[0])
-        console.log(this.wldm[0]);
         //默认表头 选择 第一个 数据 table1
         this.table = this.table0;
         this.$nextTick(() => { /* code */
-            this.dtlsearch()
+            this.dtlsearch();
+            this.ready();
         })
     },
     methods:{
+        ready(){
+            var loading = false;  //状态标记
+            const _this = this;
+            $('.view_box_list').scroll(function(){
+                console.log($("#list").Scroll());
+                if ($("#list").Scroll() < 0 && $("#list").Scroll() >-50) {
+                    if(!$("#scrollload").hasClass("none")){
+                        loading = true;
+                    }
+                    setTimeout(function () {
+                        if(loading ){
+                            _this.page ++;
+                            _this.dtlsearch();
+                            loading = false;
+                        }
+                    },10);
+                }
+            })
+        },
         showzt(){
             $('#coverBackt').removeClass('none');
             $('#multi_box').removeClass('y100');
@@ -99,8 +124,13 @@ export default {
             //更换表头
             let tables = 'table'+index;
             this.table = this[tables];
+            //重置内容
+            $('#list').html('');
+            $("#scrollload").addClass("none");
+            $("#scrollload span").html("正在加载");
+            this.page = 1;
             //查询
-            this.dtlsearch();
+            this.dtlsearch()
         },
         //点击选择店铺
         chwldm(){
@@ -155,10 +185,26 @@ export default {
             this.checkWlmc = [];
             $('.jqex_multi_box .item').removeClass('bule01AAEF');
         },
+        clickdtlsearch(){
+            $('#list').html('');
+            $("#scrollload").addClass("none");
+            $("#scrollload span").html("正在加载");
+            this.page = 1;
+            this.dtlsearch();
+        },
         //搜索
         dtlsearch(){
             const _this = this;
+            if($('#start').val() && $('#end').val()){
+                if($('#start').val()>$('#end').val()){
+                    _this.ydui.alert({
+                        'mes':'开始时间不能晚于结束时间'
+                    })
+                    return;
+                }
+            }
             fun.csear();
+            _this.ydui.loading.open('数据加载...')
             var vBiz = new D.FYBusiness("biz.sale.emp.qry");
             var vOpr1 = vBiz.addCreateService("svc.sale.emp.qry", false);
             var vOpr1Data = vOpr1.addCreateData();
@@ -169,8 +215,8 @@ export default {
             vOpr1Data.setValue("AS_JZRQ", $('#end').val() || '');
             vOpr1Data.setValue("AS_XTWLDM",$('#jq_wldm').attr('data-code'));
             vOpr1Data.setValue("AS_TYPE", (_this.tapindex+1));
-            vOpr1Data.setValue("AN_PSIZE", "100");
-            vOpr1Data.setValue("AN_PINDEX", "1");
+            vOpr1Data.setValue("AN_PSIZE", _this.pageSize);
+            vOpr1Data.setValue("AN_PINDEX", _this.page);
             var ip = new D.InvokeProc();
             ip.addBusiness(vBiz);
             _this.isShowConsolelog ? console.log(JSON.stringify(ip)) :'';
@@ -180,9 +226,8 @@ export default {
                     let list = vOpr1.getResult(d, "AC_RESULT1").rows;
                     _this.total_num = vOpr1.getOutputPermeterMapValue(d, "AN_SL");
                     _this.total_je = vOpr1.getOutputPermeterMapValue(d, "AN_JE");
-                    console.log(list);
-                    console.log(_this.total_num);
-                    console.log(_this.total_je);
+                    _this.isShowConsolelog ? console.log(list) :'';
+                    _this.ydui.loading.close();
                     _this.showdatadtl(list);
                 } else {
                     // todo...[d.errorMessage]
@@ -197,7 +242,7 @@ export default {
         showdatadtl(result){
             var html ="";
             const _this = this;
-            if( result.length ==0){
+            if( result.length ==0 && _this.page ==1){
                 html = fun.zero();
             }
             switch (_this.tapindex) {
@@ -247,7 +292,17 @@ export default {
                 default:
                     break;
             }
-            $('#list').html(html);
+            $('#list').append(html);
+            if(result.length == _this.pageSize){
+                $("#scrollload").removeClass("none");
+            }
+            if( _this.page > 1 && result.length ==0){
+                $("#scrollload span").html("没有更多了...");
+                setTimeout(function () {
+                    $("#scrollload").addClass("none");
+                    $("#scrollload span").html("正在加载");
+                },1000);
+            }
         },
     }
 }

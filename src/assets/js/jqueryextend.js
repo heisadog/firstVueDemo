@@ -323,4 +323,21 @@
         })
 
     }
+})(jQuery) +
+(function($) {
+    var Scroll = function(el) {
+        this.container = $(el);
+    }
+    Scroll.prototype.isScrollLoad = function() {
+        var container = this.container;
+        var scrollHeight = container[0].scrollHeight;
+        var height = $(window).height();
+        var offsettop = container.offset().top > 0 ? container.offset().top : container.offset().top * (-1);
+        //var offsettop = container.offset().top ;
+        return scrollHeight - (height + offsettop);
+    }
+    $.fn.Scroll = function() {
+        var ss = new Scroll(this);
+        return ss.isScrollLoad();
+    }
 })(jQuery)
