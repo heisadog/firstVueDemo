@@ -1,9 +1,9 @@
 <template>
   <div class="loginbox" id="context">
-      <div class="logo">
-        <img src="../../assets/logo2.png">
+      <div class="logo" style="margin-top:100px">
+        <img src="../../assets/logo3.jpg">
       </div>
-      <div class="login_list" style="margin-top: 33px">
+      <div class="login_list" style="margin-top: 63px">
         <span>账号</span>
         <input type="text" id="uid" placeholder="请输入账号信息" v-model="name">
         <div class="logdel none">&#xe646</div>
