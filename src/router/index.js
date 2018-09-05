@@ -20,7 +20,7 @@ export default new Router({
             }, {
                 path: '/oly/login',
                 meta: {
-                    title: '欧莱雅'
+                    title: '欧林雅'
                 },
                 component: resolve => require(['@/view/oly/login'], resolve)
             },
@@ -104,25 +104,25 @@ export default new Router({
             { //下面是 欧莱雅项目的路由
                 path: '/oly/stock',
                 meta: {
-                    title: '欧莱雅'
+                    title: '欧林雅'
                 },
                 component: resolve => require(['@/view/oly/stock'], resolve)
             }, {
                 path: '/oly/member',
                 meta: {
-                    title: '欧莱雅'
+                    title: '欧林雅'
                 },
                 component: resolve => require(['@/view/oly/member'], resolve)
             }, {
                 path: '/oly/cost',
                 meta: {
-                    title: '欧莱雅'
+                    title: '欧林雅'
                 },
                 component: resolve => require(['@/view/oly/cost'], resolve)
             }, {
                 path: '/oly/sale',
                 meta: {
-                    title: '欧莱雅'
+                    title: '欧林雅'
                 },
                 component: resolve => require(['@/view/oly/sale'], resolve)
             }

@@ -94,7 +94,7 @@ export default {
             var loading = false;  //状态标记
             const _this = this;
             $('.view_box_list').scroll(function(){
-                console.log($("#list").Scroll());
+                //console.log($("#list").Scroll());
                 if ($("#list").Scroll() < 0 && $("#list").Scroll() >-50) {
                     if(!$("#scrollload").hasClass("none")){
                         loading = true;

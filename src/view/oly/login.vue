@@ -5,13 +5,13 @@
       </div>
       <div class="login_list" style="margin-top: 63px">
         <span>账号</span>
-        <input type="text" id="uid" placeholder="请输入账号信息" v-model="name">
+        <input type="text" id="uid" placeholder="请输入账号信息" @keyup="useinfocheck" v-model="name">
         <div class="logdel none">&#xe646</div>
       </div>
       <div class="login_list" style="margin-top: 15px">
         <span>密码</span>
         <input type="password" id="pwd" placeholder="请输入登录密码" v-model="password">
-        <div class="logdel none">&#xe646</div>
+        <div class='logdel none' id="jizhu" @click="jizhu"><span>&#xe71e</span>记住密码</div>
       </div>
       <div class="login_list" style="margin-top: 15px">
         <span>帐套</span>
@@ -32,6 +32,7 @@
 }
 </style>
 <script>
+import { fun } from './fun.js';
 export default {
   data() {
       return {
@@ -39,13 +40,56 @@ export default {
         password: '',//666666
         authtype:'',
         zt:[],
+        mimaarr:[],
+        oly_check:'',//是否有记住密码的标注
       }
     },
   name: 'App',
   mounted(){
-    
+        this.$nextTick(function() {
+          //从本地存数去取是否有记住密码的标识
+          if(localStorage.ishascheck){
+            this.oly_check = localStorage.ishascheck
+          }else{
+            this.oly_check = false;
+          }
+          if(localStorage.user){
+            this.mimaarr = JSON.parse(localStorage.user)
+          }
+          console.log(this.oly_check);
+          if(this.oly_check){
+            $('#jizhu').addClass('oly_check');
+          }else{
+            $('#jizhu').removeClass('oly_check');
+          }
+        })
      },
   methods:{
+    //检测输入的帐号是否存在于 记录中
+    useinfocheck(){
+      let uid = this.name;
+      let useinfo = [];
+      if(localStorage.user){
+          useinfo = JSON.parse(localStorage.user)
+      }else{
+        useinfo = [{'uid':'周星驰','pwd':'9527'}]
+      }
+      for(let i = 0; i<useinfo.length;i++){
+        if(uid == useinfo[i].uid){
+          this.password = useinfo[i].pwd;
+        }
+      }
+    },
+    jizhu(){
+      if($('#jizhu').hasClass('oly_check')){
+        $('#jizhu').removeClass('oly_check');
+        this.oly_check = false;
+      }else{
+        $('#jizhu').addClass('oly_check');
+        this.oly_check = true;
+      }
+      console.log(this.oly_check);
+    },
     getZT(){
         const _this = this;
         let params = {
@@ -166,7 +210,7 @@ export default {
     },
     closezt(){
       $('#coverBackt').addClass('none');
-      $('#appAddrBox').addClass('y100').html('');
+      $('#appAddrBox').addClass('y100')
     },
     checkzt(dm,mc){
       console.log(dm,mc)
@@ -223,6 +267,43 @@ export default {
               localStorage.cklist = JSON.stringify(cklist);
               _this.isShowConsolelog ? console.log(cklist) :'';
               _this.ydui.loading.close();
+
+
+// 记住密码的操作 
+                  /*
+                如果 有  记住密码的标识 就 判断 改帐号密码是否已经存在 mimaarr 中，不存在就添加
+                如果 没有 记住密码的标识 就 判断 改帐号密码是否已经存在 mimaarr 中，存在 就 删除
+                  */ 
+                  // var obj = {'uid':_this.name,'pwd':_this.password};
+                  // localStorage.ishascheck = _this.oly_check;
+                  // if(_this.oly_check){
+                  //   if(JSON.stringify(_this.mimaarr).indexOf(JSON.stringify(obj)) === -1){
+                  //     //bu cun zai 不存在
+                  //     console.log('相等');
+                  //     _this.mimaarr.push(obj)
+                  //     localStorage.user = JSON.stringify(_this.mimaarr)//更新本地存储的 帐号信息
+                  //   }
+                  // }else{
+                  //   if(JSON.stringify(_this.mimaarr).indexOf(JSON.stringify(obj)) != -1){
+                  //     //cun zai 存在
+                  //     console.log('不相等');
+                  //     fun.removeObjWithArr(_this.mimaarr,obj)
+                  //     localStorage.user = JSON.stringify(_this.mimaarr)//更新本地存储的 帐号信息
+                  //   }else{
+                  //     console.log('不记住密码，不存在');
+                  //   }
+                  // }
+                  var obj = {'uid':_this.name,'pwd':_this.password};
+                  if(JSON.stringify(_this.mimaarr).indexOf(JSON.stringify(obj)) === -1){
+                      //bu cun zai 不存在
+                      console.log('相等');
+                      _this.mimaarr.push(obj)
+                      localStorage.user = JSON.stringify(_this.mimaarr)//更新本地存储的 帐号信息
+                    }
+                  console.log(_this.mimaarr);
+                  console.log(_this.oly_check);
+
+
               _this.$router.push({path:'./sale',query:{'title':'销售业绩查询'}})
           } else {
               // todo...[d.errorMessage]

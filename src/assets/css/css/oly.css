@@ -77,7 +77,8 @@
     flex: 1;
 }
 
-.oly_tab_li li.oly_check {
+.oly_tab_li li.oly_check,
+.logdel.oly_check {
     color: #01AAEF;
 }
 
@@ -278,4 +279,25 @@
     -webkit-box-flex: 1.5;
     -ms-flex: 1.5;
     flex: 1.5;
+}
+
+.logdel {
+    float: right;
+    font-family: 'wfyfont';
+    font-size: 10px;
+}
+
+.logdel span {
+    font-size: 16px;
+}
+
+.login_list input[type="password"] {
+    width: calc(100% - 120px);
+    width: -webkit-calc(100% - 120px);
+}
+
+.item {
+    font-size: 15px;
+    font-weight: 900;
+    color: #1a1a1a;
 }

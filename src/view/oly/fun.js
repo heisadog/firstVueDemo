@@ -19,5 +19,22 @@ fun.empty = function(cont) {
 fun.setTwoNum = function(price, n) {
     // if(price<0){ price = 0 };
     return isNaN(price) ? 0 : (fun.empty(n) ? new Number(price).toFixed(2) : new Number(price).toFixed(n));
+}
+fun.removeObjWithArr = function(_arr, _obj) {
+    var length = _arr.length;
+    for (var i = 0; i < length; i++) {
+        if (_arr[i] == _obj) {
+            if (i == 0) {
+                _arr.shift(); //删除并返回数组的第一个元素
+                return;
+            } else if (i == length - 1) {
+                _arr.pop(); //删除并返回数组的最后一个元素
+                return;
+            } else {
+                _arr.splice(i, 1); //删除下标为i的元素
+                return;
+            }
+        }
+    }
 };
 export { fun }
