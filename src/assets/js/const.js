@@ -17,6 +17,8 @@ window.basicUrl = basicUrl;
 const htmlHeight = document.body.clientHeight;
 document.getElementsByTagName('html')[0].style.height = (htmlHeight - 0) + 'px';
 //2018-8-23 为欧莱雅添加 未单独处理
+//you 选择帐套的 操作所以 用本地存数 并改了 dao.js的相应内容
+localStorage.APPSVR = basicUrl._wfy_uni_proc_url;
 Array.prototype.getindex = function(val) {
         for (var i = 0; i < this.length; i++) {
 

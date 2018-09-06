@@ -248,12 +248,11 @@ export default {
             switch (_this.tapindex) {
                 case 0:
                     for (let i = 0; i < result.length; i++) {
-                        let bl = Math.round(result[i].kcssje / _this.total_je * 10000) / 100.00;
                         html +='<ul class="stock_head_sell">'+
                             '<li>'+result[i].xtwlmc+'</li>'+
                             '<li>'+result[i].xtyhxm+'</li>'+
-                            '<li>'+fun.setTwoNum(result[i].kcssje)+'</li>'+
-                            '<li>' + bl + '%</li>'+
+                            '<li>'+result[i].kcczsl+'</li>'+
+                            '<li>' + fun.setTwoNum(result[i].kcssje) + '</li>'+
                             '</ul>';
                     }
                     break;
@@ -262,7 +261,7 @@ export default {
                         let bl = Math.round(result[i].kcssje / _this.total_je * 10000) / 100.00;
                         html +='<ul class="stock_head_sell">'+
                             '<li>'+result[i].xtwlmc+'</li>'+
-                            '<li>'+result[i].row_num+'</li>'+
+                            '<li>'+result[i].kcczsl+'</li>'+
                             '<li>'+fun.setTwoNum(result[i].kcssje)+'</li>'+
                             '<li>' + bl + '%</li>'+
                             '</ul>';
@@ -272,7 +271,7 @@ export default {
                     for (let i = 0; i < result.length; i++) {
                         html +='<ul class="stock_head_sell" style="border-bottom:none">'+
                             '<li>'+result[i].xtwpdm+'</li>'+
-                            '<li>'+result[i].row_num+'</li>'+
+                            '<li>'+result[i].kcczsl+'</li>'+
                             '<li>'+fun.setTwoNum(result[i].kcssje)+'</li>'+
                             '</ul>'+
                             '<div class="wfyitem_line">'+
@@ -284,7 +283,7 @@ export default {
                     for (let i = 0; i < result.length; i++) {
                         html +='<ul class="stock_head_sell">'+
                             '<li>'+result[i].kcczrq+'</li>'+
-                            '<li>'+result[i].row_num+'</li>'+
+                            '<li>'+result[i].kcczsl+'</li>'+
                             '<li>'+fun.setTwoNum(result[i].kcssje)+'</li>'+
                             '</ul>';
                     }

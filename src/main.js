@@ -113,7 +113,7 @@ Object.keys(olycomponents).forEach((key) => {
 });
 import './assets/css/css/oly.css'
 import './assets/js/jqueryextend';
-Vue.prototype.isShowConsolelog = false;
+Vue.prototype.isShowConsolelog = true;
 /*
  * 欧莱雅设置结束
  */

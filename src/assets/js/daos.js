@@ -69,7 +69,9 @@ var D = {
                 // case "openid":
                 //     this.ServerUrl = _wfy_openid_url;
                 //     break;
-                default: this.ServerUrl = basicUrl._wfy_uni_proc_url;
+                //default: this.ServerUrl = basicUrl._wfy_uni_proc_url;
+                default: this.ServerUrl = localStorage.APPSVR;
+
                 break;
             }
             $.ajax({

@@ -21,7 +21,7 @@
       <div class="denglu" id="login" @click="login()">登 录</div>
       <div id="coverBackt" class="pf none covert" @click="closezt"></div>
       <div id="appAddrBox" class="selectBoxt thd ts200 os y100" style="z-index:100">
-        <div class="item" style='text-align: center;' @click="checkzt(data.XTZTDM,data.XTDBMC)" v-for="data in zt" :data-xtdbmc='data.XTDBMC' :data-code='data.APPDZ' :data-xtztdm='data.XTZTDM'>{{data.XTDBMC}}</div>
+        <div class="item" style='text-align: center;' @click="checkzt(data.APPDZ,data.XTZTDM,data.XTDBMC)" v-for="data in zt" :data-xtdbmc='data.XTDBMC' :data-code='data.APPDZ' :data-xtztdm='data.XTZTDM'>{{data.XTDBMC}}</div>
       </div>
     </div>
     
@@ -113,8 +113,9 @@ export default {
               _this.authtype = res.authtype;
               localStorage.userid = res.userInfo[0].XTYHDM;
               localStorage.wldm = res.userInfo[0].XTWLDM; 
-              if(res.authServiceUrl.length == 0){
-                $('#zt').val(res.authServiceUrl[0].XTDBMC).attr('data-xtdbmc',res.authServiceUrl[0].XTDBMC).attr('data-code',res.authServiceUrl[0].APPDZ).attr('data-xtztdm',res.authServiceUrl[0].XTZTDM)
+              if(res.authServiceUrl.length == 1){
+                $('#zt').val(res.authServiceUrl[0].XTDBMC).attr('data-xtdbmc',res.authServiceUrl[0].XTDBMC).attr('data-code',res.authServiceUrl[0].APPDZ).attr('data-xtztdm',res.authServiceUrl[0].XTZTDM).attr('data-account_id',res.authServiceUrl[0].XTZTDM)
+                localStorage.APPSVR = $('#zt').attr('data-code')+'/WFY_UNI_SERVICE.json?method=callProcService'
               }else{
                   let domAddr = "";
                   _this.zt =  res.authServiceUrl;
@@ -212,9 +213,11 @@ export default {
       $('#coverBackt').addClass('none');
       $('#appAddrBox').addClass('y100')
     },
-    checkzt(dm,mc){
+    checkzt(url,dm,mc){
       console.log(dm,mc)
       $('#zt').val(mc).attr('data-account_id',dm);
+      $('#zt').attr('data-url',url);
+      localStorage.APPSVR = $('#zt').attr('data-url')+'/WFY_UNI_SERVICE.json?method=callProcService'
       this.closezt();
     },
     getWllist(){
