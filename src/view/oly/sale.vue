@@ -23,7 +23,7 @@
             <ul class="topSearchBox">
                 <li>
                     <span>店铺</span>
-                    <input type="text" id="jq_wldm" readonly="readonly" @click="chwldm" :data-code='checkWldm.toString()' :data-mc='checkWlmc.toString()' v-model="checkWlmc.toString()" placeholder="请选择店铺">
+                    <input type="text" id="jq_wldm" unselectable="on" onfocus="this.blur()" readonly="readonly" @click="chwldm" :data-code='checkWldm.toString()' :data-mc='checkWlmc.toString()' v-model="checkWlmc.toString()" placeholder="请选择店铺">
                     <div class="delethis" @click="deletewl"></div>
                 </li>
                 <li>
@@ -147,8 +147,6 @@ export default {
                 this.checkWldm.push(code);
                 this.checkWlmc.push(mc);
             }
-            console.error(this.checkWldm);
-            console.error(this.checkWlmc);
         },
         all(){
             const _this = this;
@@ -227,7 +225,9 @@ export default {
                     _this.total_num = vOpr1.getOutputPermeterMapValue(d, "AN_SL");
                     _this.total_je = vOpr1.getOutputPermeterMapValue(d, "AN_JE");
                     _this.isShowConsolelog ? console.log(list) :'';
-                    _this.ydui.loading.close();
+                    setTimeout(() => {
+                        _this.ydui.loading.close();
+                    }, 1500);
                     _this.showdatadtl(list);
                 } else {
                     // todo...[d.errorMessage]

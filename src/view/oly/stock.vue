@@ -24,7 +24,7 @@
             <ul class="topSearchBox">
                 <li>
                     <span>仓库</span>
-                    <input type="text" id="jq_wldm" readonly="readonly" @click="chwldm" :data-code='checkCKdm.toString()' :data-mc='checkCKmc.toString()' v-model="checkCKmc.toString()" placeholder="请选择仓库">
+                    <input type="text" id="jq_wldm" unselectable="on" onfocus="this.blur()" readonly="readonly" @click="chwldm" :data-code='checkCKdm.toString()' :data-mc='checkCKmc.toString()' v-model="checkCKmc.toString()" placeholder="请选择仓库">
                     <div class="delethis" @click="deletewl"></div>
                 </li>
                 <li class="nobor">
@@ -139,8 +139,6 @@ export default {
                 this.checkCKdm.push(code);
                 this.checkCKmc.push(mc);
             }
-            console.error(this.checkCKdm);
-            console.error(this.checkCKmc);
         },
         all(){
             const _this = this;
@@ -207,7 +205,9 @@ export default {
                     let list = vOpr1.getResult(d, "AC_KC").rows;
                     _this.isShowConsolelog ? console.log(list) :'';
                     _this.showdatadtl(list);
-                    _this.ydui.loading.close();
+                    setTimeout(() => {
+                        _this.ydui.loading.close();
+                    }, 1500);
                     // todo...
                 } else {
                     // todo...[d.errorMessage]

@@ -118,8 +118,8 @@
     position: relative;
     width: calc(100% - 20px);
     width: -webkit-calc(100% - 20px);
-    height: 44px;
-    line-height: 44px;
+    height: 40px;
+    line-height: 40px;
 }
 
 .topSearchBox li::after {
@@ -160,17 +160,17 @@
     float: left;
     width: calc(100% - 140px);
     width: -webkit-calc(100% - 140px);
-    line-height: 20px;
+    line-height: 18px;
     padding: 11px 0;
     text-align: center;
-    height: 20px;
+    height: 18px;
     background-color: transparent;
 }
 
 .topSearchBtn {
     position: relative;
     width: 100%;
-    height: 65px;
+    height: 25px;
 }
 
 .topSearchBtn::after {
@@ -188,7 +188,7 @@
 .topSearchBtn::before {
     position: absolute;
     left: 50%;
-    top: 25px;
+    top: 6px;
     width: 1px;
     height: 34px;
     content: '';
@@ -199,7 +199,7 @@
 
 .topSearchBtn span {
     float: left;
-    margin-top: 20px;
+    margin-top: 0px;
     width: 50%;
     line-height: 44px;
     text-align: center;
@@ -222,7 +222,9 @@
     width: 100%;
     height: 36px;
     border-bottom: #01AAEF solid 1px;
-    padding-top: 81px;
+    position: fixed;
+    top: 81px;
+    left: 0;
 }
 
 .oly_dtl_title li {
@@ -255,10 +257,10 @@
 .stock_head_sell,
 .wfyitem_line {
     width: 100%;
-    height: 34px;
+    height: 40px;
     border-bottom: #d9d9d9 solid 1px;
     background-color: #fff;
-    line-height: 34px;
+    line-height: 40px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -298,6 +300,9 @@
 
 .item {
     font-size: 15px;
-    font-weight: 900;
-    color: #1a1a1a;
+}
+
+#list {
+    width: 100%;
+    overflow: hidden;
 }

@@ -57,7 +57,6 @@ export default {
                         $("#start").val(values.value[0]+'-'+values.value[1]+'-'+values.value[2])
                     },
                     onChange:function(){
-                        console.log(_this.datetime0)
                     }
                 });
                 $("#end").datetimePicker({

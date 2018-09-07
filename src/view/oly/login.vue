@@ -15,13 +15,14 @@
       </div>
       <div class="login_list" style="margin-top: 15px">
         <span>帐套</span>
-        <input type="" id="zt" placeholder="请选择帐套" readonly="readonly" @click="getZT">
+        <input type="" id="zt" placeholder="请选择帐套" unselectable="on" onfocus="this.blur()" readonly="readonly" @click="getZT">
         <div class="logdel none">&#xe646</div>
       </div>
       <div class="denglu" id="login" @click="login()">登 录</div>
       <div id="coverBackt" class="pf none covert" @click="closezt"></div>
       <div id="appAddrBox" class="selectBoxt thd ts200 os y100" style="z-index:100">
-        <div class="item" style='text-align: center;' @click="checkzt(data.APPDZ,data.XTZTDM,data.XTDBMC)" v-for="data in zt" :data-xtdbmc='data.XTDBMC' :data-code='data.APPDZ' :data-xtztdm='data.XTZTDM'>{{data.XTDBMC}}</div>
+        <div class="item" style='text-align: center;font-weight: 900;
+    color: #1a1a1a;' @click="checkzt(data.APPDZ,data.XTZTDM,data.XTDBMC)" v-for="data in zt" :data-xtdbmc='data.XTDBMC' :data-code='data.APPDZ' :data-xtztdm='data.XTZTDM'>{{data.XTDBMC}}</div>
       </div>
     </div>
     
