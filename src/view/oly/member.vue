@@ -80,8 +80,10 @@ export default {
         //默认表头 选择 第一个 数据 table1
         this.table = this.table0;
         this.$nextTick(() => { /* code */
-            this.dtlsearch();
             this.ready();
+            $('#start').val(fun.getMonthStartDate())
+            $('#end').val(fun.format('yyyy-MM-dd',new Date()))
+            this.dtlsearch();
         })
     },
     methods:{

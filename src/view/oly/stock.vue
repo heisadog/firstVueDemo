@@ -76,8 +76,8 @@ export default {
        //默认表头 选择 第一个 数据 table1
         this.table = this.table0;
         this.$nextTick(() => { /* code */
-            this.dtlsearch();
             this.ready();
+            this.dtlsearch();
         })
         
     },

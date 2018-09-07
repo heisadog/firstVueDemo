@@ -22,6 +22,13 @@ export default {
             $('#cover').click(function(){
                 fun.csear()
             })
+            //删除时间(后续补充)
+            $('.delethis').click(function() {
+                var id = $(this).prev().attr('id');
+                if(id == 'start' || id == 'end'){
+                    $(this).prev().val('')
+                }
+            })
         })
         
     },
@@ -36,12 +43,6 @@ export default {
         //初始化 时间插件
         init_datetimePicker:function () {
             let _this = this;
-            // var mydate = new Date();
-            // var year = mydate.getFullYear();
-            // var month = mydate.getMonth() + 1;
-            // var day = mydate.getDate();
-            // var DateTime = year + '-' + month + '-' + day;
-            //_this.datetime6  = DateTime;
             $("#start").datetimePicker({
                     title: '请选择时间',
                     times:function(){
