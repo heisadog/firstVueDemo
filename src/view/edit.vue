@@ -14,7 +14,7 @@
                 </li>
             </ul>
             <ul v-if="isIOS" class="checkimg">
-                <li style="position: relative;">选择图片
+                <li style="position: relative;">选择图片sss
                     <input id="checkimg" type="file" value=""  @change="selectImg">
                 </li>
             </ul>
